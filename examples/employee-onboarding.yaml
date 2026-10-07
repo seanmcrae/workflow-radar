@@ -1,0 +1,104 @@
+# SYNTHETIC example audit. Invented numbers for demonstration; not drawn from any real organization.
+id: employee-onboarding
+name: Employee onboarding
+team: People Operations
+description: From signed offer to a productive first week, across HR, IT, and the hiring manager.
+synthetic: true
+currency: USD
+volumePerMonth: { low: 25, likely: 40, high: 60 }
+loadedHourlyCost: { low: 45, likely: 52, high: 60 }
+steps:
+  - id: collect-documents
+    name: Collect and verify new-hire documents
+    description: Extract details from scanned ID and tax forms and check them against the offer.
+    actor: HR coordinator
+    durationMinutes: { low: 20, likely: 30, high: 45 }
+    waitMinutes: { low: 1440, likely: 2880, high: 4320 }
+    errorRate: 0.18
+    handoffs: 1
+    dataInputs:
+      - { name: scanned ID, format: unstructured }
+      - { name: tax forms, format: semi_structured }
+    systems: [BambooHR, Gmail]
+    judgmentLevel: medium
+    regulatorySensitivity: high
+    dataReadiness: low
+
+  - id: provision-access
+    name: Request accounts and access for each system
+    description: Route access requests to each system owner based on role and department.
+    actor: IT support
+    durationMinutes: { low: 25, likely: 40, high: 60 }
+    errorRate: 0.12
+    handoffs: 2
+    dataInputs:
+      - { name: role access matrix, format: structured }
+      - { name: HRIS record, format: structured }
+    systems: [Okta, Jira, Slack]
+    judgmentLevel: low
+    regulatorySensitivity: low
+    dataReadiness: high
+
+  - id: order-equipment
+    name: Order laptop and ship equipment
+    actor: IT support
+    durationMinutes: 15
+    handoffs: 1
+    systems: [Jira]
+    taskType: other
+    judgmentLevel: low
+    dataReadiness: high
+
+  - id: first-week-plan
+    name: Draft a personalized first-week plan
+    actor: Hiring manager
+    durationMinutes: { low: 30, likely: 45, high: 60 }
+    errorRate: 0.05
+    dataInputs:
+      - { name: role description, format: unstructured }
+      - { name: team onboarding template, format: semi_structured }
+    systems: [Google Docs]
+    judgmentLevel: medium
+    regulatorySensitivity: low
+    dataReadiness: medium
+
+  - id: policy-questions
+    name: Answer policy and benefits questions
+    description: Respond to new-hire questions from the handbook and benefits guides over the first month.
+    actor: HR coordinator
+    durationMinutes: { low: 30, likely: 60, high: 120 }
+    errorRate: 0.06
+    dataInputs:
+      - { name: employee handbook, format: semi_structured }
+      - { name: benefits guides, format: unstructured }
+    systems: [Slack, Confluence]
+    taskType: generation
+    judgmentLevel: low
+    regulatorySensitivity: medium
+    dataReadiness: medium
+
+  - id: payroll-setup
+    name: Enter new hire into payroll
+    actor: Payroll specialist
+    durationMinutes: { low: 10, likely: 15, high: 25 }
+    errorRate: 0.05
+    handoffs: 1
+    dataInputs:
+      - { name: HRIS record, format: structured }
+      - { name: bank details form, format: semi_structured }
+    systems: [ADP, BambooHR]
+    taskType: extraction
+    judgmentLevel: low
+    regulatorySensitivity: high
+    dataReadiness: high
+
+  - id: background-check
+    name: Background check
+    actor: Screening vendor integration
+    actorType: system
+    durationMinutes: 2
+    waitMinutes: { low: 1440, likely: 4320, high: 7200 }
+    systems: [BambooHR]
+    judgmentLevel: low
+    regulatorySensitivity: high
+    dataReadiness: high

@@ -1,0 +1,89 @@
+# SYNTHETIC example audit. Invented numbers for demonstration; not drawn from any real organization.
+id: invoice-processing
+name: Invoice processing
+team: Accounts Payable
+description: Supplier invoices arrive by email, are keyed into the ERP, matched to POs, approved, and paid.
+synthetic: true
+currency: USD
+volumePerMonth: { low: 1500, likely: 1800, high: 2200 }
+loadedHourlyCost: { low: 48, likely: 55, high: 62 }
+steps:
+  - id: intake
+    name: Download invoice attachments from the AP inbox
+    actor: AP clerk
+    durationMinutes: { low: 1, likely: 2, high: 3 }
+    errorRate: 0.02
+    dataInputs:
+      - { name: supplier email, format: unstructured }
+      - { name: invoice PDF, format: unstructured }
+    systems: [Outlook]
+    taskType: extraction
+    judgmentLevel: low
+    dataReadiness: medium
+
+  - id: key-in
+    name: Key invoice header and line items into the ERP
+    actor: AP clerk
+    durationMinutes: { low: 6, likely: 8, high: 12 }
+    errorRate: { low: 0.08, likely: 0.12, high: 0.18 }
+    dataInputs:
+      - { name: invoice PDF, format: semi_structured }
+    systems: [SAP]
+    judgmentLevel: low
+    regulatorySensitivity: low
+    dataReadiness: medium
+
+  - id: gl-coding
+    name: Assign GL codes and cost centers
+    description: Categorize each line to a GL account using the vendor history spreadsheet.
+    actor: AP clerk
+    durationMinutes: { low: 2, likely: 3, high: 5 }
+    errorRate: 0.08
+    dataInputs:
+      - { name: invoice lines, format: structured }
+      - { name: vendor coding history, format: structured }
+    systems: [SAP, Excel]
+    judgmentLevel: medium
+    regulatorySensitivity: low
+    dataReadiness: high
+
+  - id: match-exceptions
+    name: Resolve three-way match exceptions
+    description: Investigate price and quantity mismatches, email purchasing or the vendor, and decide whether to hold or adjust.
+    actor: AP specialist
+    volumeShare: { low: 0.12, likely: 0.18, high: 0.25 }
+    durationMinutes: { low: 10, likely: 15, high: 30 }
+    waitMinutes: { low: 240, likely: 480, high: 1440 }
+    errorRate: 0.1
+    handoffs: 2
+    dataInputs:
+      - { name: purchase order, format: structured }
+      - { name: goods receipt, format: structured }
+      - { name: vendor correspondence, format: unstructured }
+    systems: [SAP, Outlook]
+    judgmentLevel: medium
+    regulatorySensitivity: low
+    dataReadiness: medium
+
+  - id: approval
+    name: Approve invoices above the $5,000 threshold
+    actor: Cost center manager
+    volumeShare: 0.3
+    durationMinutes: { low: 2, likely: 4, high: 8 }
+    waitMinutes: { low: 480, likely: 1440, high: 2880 }
+    errorRate: 0.03
+    handoffs: 1
+    systems: [SAP]
+    judgmentLevel: high
+    regulatorySensitivity: medium
+    dataReadiness: high
+
+  - id: payment-run
+    name: Scheduled payment run
+    actor: ERP batch job
+    actorType: system
+    durationMinutes: 1
+    systems: [SAP]
+    judgmentLevel: low
+    regulatorySensitivity: medium
+    dataReadiness: high

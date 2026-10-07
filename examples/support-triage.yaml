@@ -1,0 +1,89 @@
+# SYNTHETIC example audit. Invented numbers for demonstration; not drawn from any real organization.
+id: support-triage
+name: Customer support triage
+team: Customer Support
+description: Inbound email and web-form tickets are tagged, routed, researched, and answered by Tier 1.
+synthetic: true
+currency: USD
+volumePerMonth: { low: 9000, likely: 12000, high: 15000 }
+loadedHourlyCost: { low: 32, likely: 38, high: 45 }
+steps:
+  - id: tag-ticket
+    name: Read new ticket and tag product area and intent
+    actor: Tier 1 agent
+    durationMinutes: { low: 1.5, likely: 2.5, high: 4 }
+    errorRate: { low: 0.1, likely: 0.15, high: 0.2 }
+    dataInputs:
+      - { name: ticket text, format: unstructured }
+    systems: [Zendesk]
+    judgmentLevel: low
+    regulatorySensitivity: low
+    dataReadiness: high
+
+  - id: route
+    name: Set priority and route to the right queue
+    actor: Tier 1 agent
+    durationMinutes: 1
+    errorRate: 0.1
+    handoffs: 1
+    dataInputs:
+      - { name: ticket tags, format: structured }
+    systems: [Zendesk]
+    judgmentLevel: low
+    regulatorySensitivity: low
+    dataReadiness: high
+
+  - id: account-lookup
+    name: Look up customer account and order history
+    actor: Tier 1 agent
+    volumeShare: 0.7
+    durationMinutes: { low: 2, likely: 3, high: 5 }
+    errorRate: 0.04
+    dataInputs:
+      - { name: CRM account record, format: structured }
+      - { name: billing history, format: structured }
+    systems: [Salesforce, Stripe]
+    judgmentLevel: low
+    regulatorySensitivity: medium
+    dataReadiness: high
+
+  - id: draft-reply
+    name: Draft first response
+    description: Write a reply using help center articles and the account context.
+    actor: Tier 1 agent
+    durationMinutes: { low: 4, likely: 6, high: 10 }
+    errorRate: 0.08
+    dataInputs:
+      - { name: help center articles, format: semi_structured }
+      - { name: ticket text, format: unstructured }
+    systems: [Zendesk, Confluence]
+    judgmentLevel: medium
+    regulatorySensitivity: low
+    dataReadiness: medium
+
+  - id: escalate
+    name: Escalate to Tier 2 with a case summary
+    actor: Tier 1 agent
+    volumeShare: { low: 0.15, likely: 0.2, high: 0.25 }
+    durationMinutes: { low: 5, likely: 7, high: 12 }
+    waitMinutes: { low: 60, likely: 240, high: 720 }
+    errorRate: 0.12
+    handoffs: 1
+    dataInputs:
+      - { name: ticket thread, format: unstructured }
+    systems: [Zendesk, Jira]
+    judgmentLevel: medium
+    regulatorySensitivity: low
+    dataReadiness: medium
+
+  - id: refund-decision
+    name: Decide on refund or goodwill credit
+    actor: Tier 1 lead
+    volumeShare: 0.08
+    durationMinutes: { low: 3, likely: 5, high: 10 }
+    waitMinutes: 120
+    handoffs: 1
+    systems: [Stripe]
+    judgmentLevel: high
+    regulatorySensitivity: medium
+    dataReadiness: high

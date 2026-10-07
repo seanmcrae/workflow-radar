@@ -1,0 +1,93 @@
+# SYNTHETIC example audit. Invented numbers for demonstration; not drawn from any real organization.
+id: sales-proposal
+name: Sales proposal drafting
+team: Sales and Solutions Engineering
+description: Mid-market proposals from discovery call through priced, legally reviewed document.
+synthetic: true
+currency: USD
+volumePerMonth: { low: 30, likely: 45, high: 60 }
+loadedHourlyCost: { low: 85, likely: 95, high: 110 }
+steps:
+  - id: discovery-summary
+    name: Summarize discovery call notes
+    actor: Account executive
+    durationMinutes: { low: 15, likely: 25, high: 40 }
+    errorRate: 0.05
+    dataInputs:
+      - { name: call transcript, format: unstructured }
+    systems: [Salesforce, Google Docs]
+    judgmentLevel: low
+    regulatorySensitivity: low
+    dataReadiness: medium
+
+  - id: requirements-mapping
+    name: Map customer requirements to product capabilities
+    description: Categorize each stated requirement as supported, roadmap, or gap using the capability matrix.
+    actor: Solutions engineer
+    durationMinutes: { low: 60, likely: 90, high: 150 }
+    errorRate: 0.15
+    handoffs: 1
+    dataInputs:
+      - { name: discovery summary, format: unstructured }
+      - { name: capability matrix, format: structured }
+    systems: [Confluence, Google Sheets]
+    judgmentLevel: medium
+    regulatorySensitivity: low
+    dataReadiness: medium
+
+  - id: draft-proposal
+    name: Draft proposal narrative and scope
+    actor: Account executive
+    durationMinutes: { low: 120, likely: 180, high: 300 }
+    errorRate: { low: 0.1, likely: 0.2, high: 0.3 }
+    dataInputs:
+      - { name: past proposals, format: semi_structured }
+      - { name: requirements map, format: structured }
+    systems: [Google Docs, Salesforce]
+    judgmentLevel: medium
+    regulatorySensitivity: low
+    dataReadiness: medium
+
+  - id: pricing-approval
+    name: Build pricing and approve discounts
+    actor: Sales manager
+    durationMinutes: { low: 30, likely: 45, high: 90 }
+    waitMinutes: { low: 480, likely: 1440, high: 2880 }
+    errorRate: 0.05
+    handoffs: 2
+    dataInputs:
+      - { name: price book, format: structured }
+    systems: [Salesforce, Excel]
+    judgmentLevel: high
+    regulatorySensitivity: medium
+    dataReadiness: high
+
+  - id: legal-review
+    name: Legal review of non-standard terms
+    actor: Commercial counsel
+    volumeShare: 0.35
+    durationMinutes: { low: 30, likely: 60, high: 120 }
+    waitMinutes: { low: 1440, likely: 2880, high: 5760 }
+    handoffs: 1
+    dataInputs:
+      - { name: redlined contract, format: unstructured }
+    systems: [DocuSign]
+    judgmentLevel: high
+    regulatorySensitivity: high
+    dataReadiness: medium
+
+  - id: security-questionnaire
+    name: Answer customer security questionnaire
+    description: Draft answers from the security knowledge base and prior questionnaires.
+    actor: Solutions engineer
+    volumeShare: 0.4
+    durationMinutes: { low: 120, likely: 240, high: 480 }
+    errorRate: 0.1
+    handoffs: 1
+    dataInputs:
+      - { name: questionnaire spreadsheet, format: semi_structured }
+      - { name: security knowledge base, format: semi_structured }
+    systems: [Google Sheets, Confluence]
+    judgmentLevel: medium
+    regulatorySensitivity: medium
+    dataReadiness: medium
