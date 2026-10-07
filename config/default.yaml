@@ -1,0 +1,63 @@
+# Default scoring configuration for ai-workflow-audit.
+# Copy this file, change what you need, and pass it with `--config`.
+# Any key you omit falls back to the default shown here.
+
+friction:
+  # Relative importance of each friction factor; normalized to sum to 1.
+  weights: { time: 0.35, rework: 0.25, handoffs: 0.2, wait: 0.2 }
+  # Raw value at which a factor counts as maximal friction.
+  saturation: { durationMinutes: 60, errorRate: 0.25, handoffs: 4, waitMinutes: 1440 }
+
+suitability:
+  weights: { taskType: 0.35, dataReadiness: 0.25, judgment: 0.2, risk: 0.2 }
+  # How well current AI handles each task type (0-1).
+  taskTypeFit:
+    extraction: 0.9
+    classification: 0.85
+    summarization: 0.85
+    generation: 0.7
+    decision: 0.3
+    other: 0.1
+  dataReadiness: { low: 0.2, medium: 0.6, high: 1 }
+  # Higher means more automatable.
+  judgment: { low: 1, medium: 0.6, high: 0.2 }
+  # Regulatory sensitivity mapped to safety-to-automate.
+  risk: { none: 1, low: 0.85, medium: 0.5, high: 0.15 }
+
+patterns:
+  thresholds:
+    minSuitability: 45
+    automationSuitability: 65
+    agentSuitability: 80
+    agentMinSystems: 2
+  # Share of step labor removed by each pattern, as a three-point range.
+  automationFraction:
+    copilot: { low: 0.2, likely: 0.35, high: 0.5 }
+    automation_with_review: { low: 0.45, likely: 0.6, high: 0.75 }
+    agent: { low: 0.55, likely: 0.7, high: 0.85 }
+  # One-time build cost bands in the workflow currency.
+  implementationCost:
+    copilot: { low: 5000, likely: 12000, high: 25000 }
+    automation_with_review: { low: 15000, likely: 35000, high: 70000 }
+    agent: { low: 40000, likely: 90000, high: 180000 }
+  # Model usage, hosting, and maintenance per month.
+  monthlyRunCost:
+    copilot: { low: 100, likely: 250, high: 500 }
+    automation_with_review: { low: 300, likely: 800, high: 1500 }
+    agent: { low: 800, likely: 2000, high: 4000 }
+
+effort:
+  base: { copilot: 25, automation_with_review: 45, agent: 70 }
+  dataReadinessPenalty: { low: 20, medium: 8, high: 0 }
+  regulatoryPenalty: { none: 0, low: 0, medium: 6, high: 12 }
+  perExtraSystemPenalty: 4
+
+prioritization:
+  # Annual gross savings that maps to a value score of 100.
+  valueCapAnnual: 100000
+  valueThreshold: 50
+  effortThreshold: 50
+
+simulation:
+  iterations: 5000
+  seed: 42
