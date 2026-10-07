@@ -72,6 +72,7 @@ steps:
     dataInputs:
       - { name: redlined contract, format: unstructured }
     systems: [DocuSign]
+    taskType: decision
     judgmentLevel: high
     regulatorySensitivity: high
     dataReadiness: medium

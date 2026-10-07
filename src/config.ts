@@ -75,6 +75,7 @@ export const configSchema = z
             automationSuitability: z.number().min(0).max(100),
             agentSuitability: z.number().min(0).max(100),
             agentMinSystems: z.number().int().min(1),
+            agentMinHandoffs: z.number().int().min(0),
           })
           .strict(),
         automationFraction: perPattern(fractionRange),
@@ -94,7 +95,7 @@ export const configSchema = z
       .strict(),
     prioritization: z
       .object({
-        /** Annual gross savings that maps to a value score of 100. */
+        /** Annual net savings (after run cost) that maps to a value score of 100. */
         valueCapAnnual: z.number().positive(),
         valueThreshold: z.number().min(0).max(100),
         effortThreshold: z.number().min(0).max(100),
@@ -139,6 +140,7 @@ export const DEFAULT_CONFIG: AuditConfig = {
       automationSuitability: 65,
       agentSuitability: 80,
       agentMinSystems: 2,
+      agentMinHandoffs: 1,
     },
     automationFraction: {
       copilot: { low: 0.2, likely: 0.35, high: 0.5 },
@@ -157,8 +159,8 @@ export const DEFAULT_CONFIG: AuditConfig = {
     },
   },
   effort: {
-    base: { copilot: 25, automation_with_review: 45, agent: 70 },
-    dataReadinessPenalty: { low: 20, medium: 8, high: 0 },
+    base: { copilot: 20, automation_with_review: 40, agent: 65 },
+    dataReadinessPenalty: { low: 20, medium: 5, high: 0 },
     regulatoryPenalty: { none: 0, low: 0, medium: 6, high: 12 },
     perExtraSystemPenalty: 4,
   },

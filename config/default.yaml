@@ -30,6 +30,7 @@ patterns:
     automationSuitability: 65
     agentSuitability: 80
     agentMinSystems: 2
+    agentMinHandoffs: 1
   # Share of step labor removed by each pattern, as a three-point range.
   automationFraction:
     copilot: { low: 0.2, likely: 0.35, high: 0.5 }
@@ -47,13 +48,13 @@ patterns:
     agent: { low: 800, likely: 2000, high: 4000 }
 
 effort:
-  base: { copilot: 25, automation_with_review: 45, agent: 70 }
-  dataReadinessPenalty: { low: 20, medium: 8, high: 0 }
+  base: { copilot: 20, automation_with_review: 40, agent: 65 }
+  dataReadinessPenalty: { low: 20, medium: 5, high: 0 }
   regulatoryPenalty: { none: 0, low: 0, medium: 6, high: 12 }
   perExtraSystemPenalty: 4
 
 prioritization:
-  # Annual gross savings that maps to a value score of 100.
+  # Annual net savings (after run cost, before build cost) that maps to a value score of 100.
   valueCapAnnual: 100000
   valueThreshold: 50
   effortThreshold: 50
