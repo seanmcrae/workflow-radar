@@ -51,8 +51,22 @@ function opportunityDetail(o: Opportunity, currency: string): string {
     table(
       ["Score", "Factor", "Value", "Weight", "Points", "Why"],
       [
-        ...o.friction.factors.map((f) => ["Friction", f.factor, num(f.value, 2), num(f.weight, 2), num(f.points, 1), cell(f.note)]),
-        ...o.suitability.factors.map((f) => ["Suitability", f.factor, num(f.value, 2), num(f.weight, 2), num(f.points, 1), cell(f.note)]),
+        ...o.friction.factors.map((f) => [
+          "Friction",
+          f.factor,
+          num(f.value, 2),
+          num(f.weight, 2),
+          num(f.points, 1),
+          cell(f.note),
+        ]),
+        ...o.suitability.factors.map((f) => [
+          "Suitability",
+          f.factor,
+          num(f.value, 2),
+          num(f.weight, 2),
+          num(f.points, 1),
+          cell(f.note),
+        ]),
       ],
     ),
     "",
@@ -61,10 +75,34 @@ function opportunityDetail(o: Opportunity, currency: string): string {
     table(
       ["Metric", "Likely-input estimate", "P10", "P50", "P90"],
       [
-        ["Hours saved / month", num(e.point.hoursSavedPerMonth), num(sim.hoursSavedPerMonth.p10), num(sim.hoursSavedPerMonth.p50), num(sim.hoursSavedPerMonth.p90)],
-        ["Net savings / month", money(e.point.monthlyNet, currency), money(sim.monthlyNet.p10, currency), money(sim.monthlyNet.p50, currency), money(sim.monthlyNet.p90, currency)],
-        ["First-year net", money(e.point.firstYearNet, currency), money(sim.firstYearNet.p10, currency), money(sim.firstYearNet.p50, currency), money(sim.firstYearNet.p90, currency)],
-        ["Payback", months(e.point.paybackMonths), months(sim.paybackMonths.p10), months(sim.paybackMonths.p50), months(sim.paybackMonths.p90)],
+        [
+          "Hours saved / month",
+          num(e.point.hoursSavedPerMonth),
+          num(sim.hoursSavedPerMonth.p10),
+          num(sim.hoursSavedPerMonth.p50),
+          num(sim.hoursSavedPerMonth.p90),
+        ],
+        [
+          "Net savings / month",
+          money(e.point.monthlyNet, currency),
+          money(sim.monthlyNet.p10, currency),
+          money(sim.monthlyNet.p50, currency),
+          money(sim.monthlyNet.p90, currency),
+        ],
+        [
+          "First-year net",
+          money(e.point.firstYearNet, currency),
+          money(sim.firstYearNet.p10, currency),
+          money(sim.firstYearNet.p50, currency),
+          money(sim.firstYearNet.p90, currency),
+        ],
+        [
+          "Payback",
+          months(e.point.paybackMonths),
+          months(sim.paybackMonths.p10),
+          months(sim.paybackMonths.p50),
+          months(sim.paybackMonths.p90),
+        ],
       ],
     ),
     "",
@@ -72,13 +110,15 @@ function opportunityDetail(o: Opportunity, currency: string): string {
     "",
     table(
       ["Input", "Range", "Net at low", "Net at high", "Swing"],
-      e.tornado.slice(0, 5).map((b) => [
-        ROI_INPUT_LABELS[b.input],
-        `${num(b.lowInput, b.lowInput < 1 ? 2 : 0)} – ${num(b.highInput, b.highInput < 1 ? 2 : 0)}`,
-        money(b.outputAtLow, currency),
-        money(b.outputAtHigh, currency),
-        money(b.swing, currency),
-      ]),
+      e.tornado
+        .slice(0, 5)
+        .map((b) => [
+          ROI_INPUT_LABELS[b.input],
+          `${num(b.lowInput, b.lowInput < 1 ? 2 : 0)} – ${num(b.highInput, b.highInput < 1 ? 2 : 0)}`,
+          money(b.outputAtLow, currency),
+          money(b.outputAtHigh, currency),
+          money(b.swing, currency),
+        ]),
     ),
   ];
   if (o.guardrails.length > 0) {
@@ -111,11 +151,27 @@ export function renderMarkdown(result: AuditResult, meta: ReportMeta): string {
     "",
   );
 
-  const headers = ["#", "Workflow", "Step", "Pattern", "Value", "Effort", "Hours/mo P50", `First-year net P10 / P50 / P90`, "Payback P50", "P(net > 0)"];
+  const headers = [
+    "#",
+    "Workflow",
+    "Step",
+    "Pattern",
+    "Value",
+    "Effort",
+    "Hours/mo P50",
+    `First-year net P10 / P50 / P90`,
+    "Payback P50",
+    "P(net > 0)",
+  ];
   for (const phase of roadmap(result)) {
     parts.push(`### ${phase.title}`, "", phase.description, "");
     parts.push(
-      phase.opportunities.length > 0 ? table(headers, phase.opportunities.map((o) => roadmapRow(o, c))) : "_None._",
+      phase.opportunities.length > 0
+        ? table(
+            headers,
+            phase.opportunities.map((o) => roadmapRow(o, c)),
+          )
+        : "_None._",
       "",
     );
   }
@@ -125,17 +181,46 @@ export function renderMarkdown(result: AuditResult, meta: ReportMeta): string {
       "",
       table(
         ["Workflow", "Step", "Friction", "Suitability", "Reason"],
-        s.notRecommended.map((o) => [cell(o.workflowName), cell(o.stepName), num(o.friction.score), num(o.suitability.score), cell(o.patternRationale)]),
+        s.notRecommended.map((o) => [
+          cell(o.workflowName),
+          cell(o.stepName),
+          num(o.friction.score),
+          num(o.suitability.score),
+          cell(o.patternRationale),
+        ]),
       ),
       "",
     );
   }
 
-  parts.push("## Value vs effort", "", `![Value vs effort quadrant](${meta.quadrantImage})`, "", "## Workflows", "");
+  parts.push(
+    "## Value vs effort",
+    "",
+    `![Value vs effort quadrant](${meta.quadrantImage})`,
+    "",
+    "## Workflows",
+    "",
+  );
   parts.push(
     table(
-      ["Workflow", "Team", "Volume / month", "Labor hours / month", "Friction", "Human / system steps", "Synthetic"],
-      result.workflows.map((w) => [cell(w.name), cell(w.team), rangeText(w.volumePerMonth), num(w.laborHoursPerMonth), num(w.friction), `${w.humanSteps} / ${w.systemSteps}`, w.synthetic ? "yes" : "no"]),
+      [
+        "Workflow",
+        "Team",
+        "Volume / month",
+        "Labor hours / month",
+        "Friction",
+        "Human / system steps",
+        "Synthetic",
+      ],
+      result.workflows.map((w) => [
+        cell(w.name),
+        cell(w.team),
+        rangeText(w.volumePerMonth),
+        num(w.laborHoursPerMonth),
+        num(w.friction),
+        `${w.humanSteps} / ${w.systemSteps}`,
+        w.synthetic ? "yes" : "no",
+      ]),
     ),
     "",
     "## Opportunity details",

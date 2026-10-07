@@ -1,5 +1,6 @@
-dist/
-coverage/
-report/
-docs/sample-report/
+/dist/
+/coverage/
+/report/
+/site/
+/docs/sample-report/
 package-lock.json
