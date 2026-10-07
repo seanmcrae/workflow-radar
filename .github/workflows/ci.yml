@@ -25,3 +25,5 @@ jobs:
       - run: npm run build
       - name: Demo report on synthetic examples
         run: node dist/cli.js report examples/*.yaml --out report
+      - name: Build static site
+        run: npm run site
