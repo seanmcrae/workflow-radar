@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+report/
+.cache/
+.vitest/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+data/downloads/
+.DS_Store

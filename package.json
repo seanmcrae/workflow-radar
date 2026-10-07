@@ -1,0 +1,45 @@
+{
+  "name": "ai-workflow-audit",
+  "version": "0.1.0",
+  "description": "Score business workflows for friction and AI suitability, estimate ROI with Monte Carlo uncertainty, and produce a prioritized AI roadmap.",
+  "license": "MIT",
+  "author": "Sean Wayne",
+  "type": "module",
+  "bin": {
+    "audit": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "config",
+    "examples"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "demo": "npm run build && node dist/cli.js report examples/*.yaml --out report",
+    "sample": "npm run build && node dist/cli.js report examples/*.yaml --out docs/sample-report && cp docs/sample-report/quadrant.svg docs/img/quadrant.svg"
+  },
+  "dependencies": {
+    "commander": "^14.0.0",
+    "yaml": "^2.8.0",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^20.19.0",
+    "eslint": "^10.12.0",
+    "prettier": "^3.6.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.0",
+    "vitest": "^3.2.4"
+  }
+}
