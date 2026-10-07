@@ -80,8 +80,18 @@ export interface AuditResult {
   config: AuditConfig;
 }
 
-export function quadrantFor(value: number, effort: number, config: AuditConfig): Quadrant {
-  const { valueThreshold, effortThreshold } = config.prioritization;
+/**
+ * Places an opportunity on the value/effort grid. A median payback beyond the configured
+ * horizon overrides the grid: high value on paper does not justify capital that never returns.
+ */
+export function quadrantFor(
+  value: number,
+  effort: number,
+  paybackMonthsP50: number,
+  config: AuditConfig,
+): Quadrant {
+  const { valueThreshold, effortThreshold, maxPaybackMonths } = config.prioritization;
+  if (!(paybackMonthsP50 <= maxPaybackMonths)) return "deprioritize";
   const highValue = value >= valueThreshold;
   const lowEffort = effort < effortThreshold;
   if (highValue) return lowEffort ? "quick_win" : "big_bet";
@@ -136,7 +146,7 @@ export function assessStep(workflow: Workflow, step: Step, config: AuditConfig):
       tornado: tornado(inputs),
       effort,
       value,
-      quadrant: quadrantFor(value, effort.score, config),
+      quadrant: quadrantFor(value, effort.score, simulation.paybackMonths.p50, config),
     },
   };
 }

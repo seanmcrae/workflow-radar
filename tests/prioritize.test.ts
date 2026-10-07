@@ -100,7 +100,14 @@ describe("quadrantFor", () => {
     [20, 70, "deprioritize"],
     [50, 50, "big_bet"],
   ] as const)("value %d, effort %d -> %s", (value, effort, expected) => {
-    expect(quadrantFor(value, effort, DEFAULT_CONFIG)).toBe(expected);
+    expect(quadrantFor(value, effort, 6, DEFAULT_CONFIG)).toBe(expected);
+  });
+
+  it("parks opportunities whose median payback exceeds the horizon", () => {
+    expect(quadrantFor(90, 10, 18, DEFAULT_CONFIG)).toBe("quick_win");
+    expect(quadrantFor(90, 10, 18.5, DEFAULT_CONFIG)).toBe("deprioritize");
+    expect(quadrantFor(90, 10, Infinity, DEFAULT_CONFIG)).toBe("deprioritize");
+    expect(quadrantFor(90, 10, NaN, DEFAULT_CONFIG)).toBe("deprioritize");
   });
 });
 

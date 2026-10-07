@@ -99,6 +99,8 @@ export const configSchema = z
         valueCapAnnual: z.number().positive(),
         valueThreshold: z.number().min(0).max(100),
         effortThreshold: z.number().min(0).max(100),
+        /** Opportunities whose P50 payback exceeds this are parked regardless of quadrant. */
+        maxPaybackMonths: z.number().positive(),
       })
       .strict(),
     simulation: z
@@ -168,6 +170,7 @@ export const DEFAULT_CONFIG: AuditConfig = {
     valueCapAnnual: 150000,
     valueThreshold: 50,
     effortThreshold: 50,
+    maxPaybackMonths: 18,
   },
   simulation: {
     iterations: 5000,

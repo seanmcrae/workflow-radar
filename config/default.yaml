@@ -58,6 +58,8 @@ prioritization:
   valueCapAnnual: 150000
   valueThreshold: 50
   effortThreshold: 50
+  # Park any opportunity whose median payback is longer than this.
+  maxPaybackMonths: 18
 
 simulation:
   iterations: 5000

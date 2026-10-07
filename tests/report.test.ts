@@ -92,7 +92,7 @@ describe("quadrantSvg", () => {
   const svg = quadrantSvg(audit());
 
   it("draws one marker per recommended opportunity", () => {
-    expect(svg.match(/<circle [^>]*stroke="#ffffff"/g)).toHaveLength(2);
+    expect(svg.match(/<g class="opportunity">/g)).toHaveLength(2);
     expect(svg).toContain("Quick wins");
   });
 
