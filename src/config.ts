@@ -165,7 +165,7 @@ export const DEFAULT_CONFIG: AuditConfig = {
     perExtraSystemPenalty: 4,
   },
   prioritization: {
-    valueCapAnnual: 100000,
+    valueCapAnnual: 150000,
     valueThreshold: 50,
     effortThreshold: 50,
   },

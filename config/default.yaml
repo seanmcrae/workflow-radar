@@ -55,7 +55,7 @@ effort:
 
 prioritization:
   # Annual net savings (after run cost, before build cost) that maps to a value score of 100.
-  valueCapAnnual: 100000
+  valueCapAnnual: 150000
   valueThreshold: 50
   effortThreshold: 50
 
