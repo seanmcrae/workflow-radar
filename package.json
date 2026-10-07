@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Score business workflows for friction and AI suitability, estimate ROI with Monte Carlo uncertainty, and produce a prioritized AI roadmap.",
   "license": "MIT",
-  "author": "Sean Wayne",
+  "author": "Sean McRae",
   "type": "module",
   "bin": {
     "workflow-radar": "dist/cli.js",
