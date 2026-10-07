@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata."
+title: "workflow-radar: friction, AI-suitability, and Monte Carlo ROI scoring for business workflows"
+type: software
+authors:
+  - family-names: McRae
+    given-names: Sean
+version: 0.1.0
+date-released: "2026-10-07"
+license: MIT
+repository-code: "https://github.com/seanmcrae/workflow-radar"
+url: "https://seanmcrae.github.io/workflow-radar/"
+abstract: >-
+  A command-line tool that scores business workflows for friction and AI suitability,
+  recommends a delivery pattern with guardrails, estimates ROI as a P10/P50/P90 range with a
+  seeded Monte Carlo simulation, and writes a prioritized AI roadmap.
+keywords:
+  - ai-strategy
+  - workflow-analysis
+  - roi
+  - monte-carlo
+  - prioritization

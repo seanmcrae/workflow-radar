@@ -1,0 +1,32 @@
+name: Bug report
+description: Something produced an error, a wrong score, or a broken report.
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you expected and what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction
+      description: The command you ran and the smallest workflow YAML that reproduces it. Use synthetic data only.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: Full CLI output, including any error message.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `node dist/cli.js --version` and `node --version`.
+    validations:
+      required: true
