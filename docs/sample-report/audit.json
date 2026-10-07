@@ -1,0 +1,5611 @@
+{
+  "workflows": [
+    {
+      "id": "employee-onboarding",
+      "name": "Employee onboarding",
+      "team": "People Operations",
+      "synthetic": true,
+      "currency": "USD",
+      "volumePerMonth": {
+        "low": 25,
+        "likely": 40,
+        "high": 60
+      },
+      "friction": 38.76529790660225,
+      "laborHoursPerMonth": 147.86666666666667,
+      "humanSteps": 6,
+      "systemSteps": 1
+    },
+    {
+      "id": "invoice-processing",
+      "name": "Invoice processing",
+      "team": "Accounts Payable",
+      "synthetic": true,
+      "currency": "USD",
+      "volumePerMonth": {
+        "low": 1500,
+        "likely": 1800,
+        "high": 2200
+      },
+      "friction": 16.844972067039105,
+      "laborHoursPerMonth": 553.38,
+      "humanSteps": 5,
+      "systemSteps": 1
+    },
+    {
+      "id": "sales-proposal",
+      "name": "Sales proposal drafting",
+      "team": "Sales and Solutions Engineering",
+      "synthetic": true,
+      "currency": "USD",
+      "volumePerMonth": {
+        "low": 30,
+        "likely": 45,
+        "high": 60
+      },
+      "friction": 52.85740335521517,
+      "laborHoursPerMonth": 389.7,
+      "humanSteps": 6,
+      "systemSteps": 0
+    },
+    {
+      "id": "support-triage",
+      "name": "Customer support triage",
+      "team": "Customer Support",
+      "synthetic": true,
+      "currency": "USD",
+      "volumePerMonth": {
+        "low": 9000,
+        "likely": 12000,
+        "high": 15000
+      },
+      "friction": 13.120957711442788,
+      "laborHoursPerMonth": 2921.4,
+      "humanSteps": 6,
+      "systemSteps": 0
+    }
+  ],
+  "opportunities": [
+    {
+      "id": "support-triage/draft-reply",
+      "workflowId": "support-triage",
+      "workflowName": "Customer support triage",
+      "stepId": "draft-reply",
+      "stepName": "Draft first response",
+      "actor": "Tier 1 agent",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 11.5,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.1,
+            "weight": 0.35,
+            "points": 3.5,
+            "note": "6 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.32,
+            "weight": 0.25,
+            "points": 8,
+            "note": "8% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 68.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.7,
+            "weight": 0.35,
+            "points": 24.5,
+            "note": "generation (inferred from \"draft\", \"write\", \"reply\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "data readiness medium"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.6,
+            "weight": 0.2,
+            "points": 12,
+            "note": "medium judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.85,
+            "weight": 0.2,
+            "points": 17,
+            "note": "regulatory sensitivity low"
+          }
+        ],
+        "task": {
+          "taskType": "generation",
+          "matched": [
+            "draft",
+            "write",
+            "reply"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 69 supports automation with human review of exceptions.",
+      "guardrails": [
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 1,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 9000,
+            "likely": 12000,
+            "high": 15000
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 4,
+            "likely": 6,
+            "high": 10
+          },
+          "errorRate": {
+            "low": 0.08,
+            "likely": 0.08,
+            "high": 0.08
+          },
+          "hourlyCost": {
+            "low": 32,
+            "likely": 38,
+            "high": 45
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 777.6,
+          "monthlySavings": 29548.8,
+          "monthlyNet": 28748.8,
+          "firstYearNet": 309985.6,
+          "paybackMonths": 1.2174421193232414
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 610.9903523104337,
+            "p50": 837.3884681084035,
+            "p90": 1138.313749964957
+          },
+          "monthlySavings": {
+            "p10": 23053.403450462538,
+            "p50": 32010.46091976195,
+            "p90": 44199.44208974751
+          },
+          "monthlyNet": {
+            "p10": 22240.543459669618,
+            "p50": 31113.00195212423,
+            "p90": 43231.01384407801
+          },
+          "firstYearNet": {
+            "p10": 225482.01205241217,
+            "p50": 333756.24963316316,
+            "p90": 480519.5986268989
+          },
+          "paybackMonths": {
+            "p10": 0.7407211954397266,
+            "p50": 1.236415005348094,
+            "p90": 2.0200218513963235
+          },
+          "iterations": 5000,
+          "seed": 4110118304,
+          "probabilityPositiveFirstYear": 1
+        },
+        "tornado": [
+          {
+            "input": "durationMinutes",
+            "lowInput": 4,
+            "highInput": 10,
+            "outputAtLow": 191790.40000000002,
+            "outputAtHigh": 546376.0000000001,
+            "swing": 354585.6000000001
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": 221339.2,
+            "outputAtHigh": 398632,
+            "swing": 177292.8
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 9000,
+            "highInput": 15000,
+            "outputAtLow": 221339.2,
+            "outputAtHigh": 398632,
+            "swing": 177292.8
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 32,
+            "highInput": 45,
+            "outputAtLow": 253998.40000000002,
+            "outputAtHigh": 375304,
+            "swing": 121305.59999999998
+          },
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": 329985.6,
+            "outputAtHigh": 274985.6,
+            "swing": 55000
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": 315985.6,
+            "outputAtHigh": 301585.6,
+            "swing": 14400
+          }
+        ],
+        "effort": {
+          "score": 49,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 5,
+              "note": "data readiness medium"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity low"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 100,
+        "quadrant": "quick_win"
+      }
+    },
+    {
+      "id": "support-triage/tag-ticket",
+      "workflowId": "support-triage",
+      "workflowName": "Customer support triage",
+      "stepId": "tag-ticket",
+      "stepName": "Read new ticket and tag product area and intent",
+      "actor": "Tier 1 agent",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 16.458333333333332,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.041666666666666664,
+            "weight": 0.35,
+            "points": 1.4583333333333333,
+            "note": "2.5 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "15% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 91.75,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.85,
+            "weight": 0.35,
+            "points": 29.75,
+            "note": "classification (inferred from \"tag\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 1,
+            "weight": 0.25,
+            "points": 25,
+            "note": "data readiness high"
+          },
+          {
+            "factor": "judgment",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "low judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.85,
+            "weight": 0.2,
+            "points": 17,
+            "note": "regulatory sensitivity low"
+          }
+        ],
+        "task": {
+          "taskType": "classification",
+          "matched": [
+            "tag"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 92 supports automation with human review of exceptions.",
+      "guardrails": [
+        "High baseline rework: run in shadow mode and compare model error to the human baseline before cutover.",
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 2,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 9000,
+            "likely": 12000,
+            "high": 15000
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 1.5,
+            "likely": 2.5,
+            "high": 4
+          },
+          "errorRate": {
+            "low": 0.1,
+            "likely": 0.15,
+            "high": 0.2
+          },
+          "hourlyCost": {
+            "low": 32,
+            "likely": 38,
+            "high": 45
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 345,
+          "monthlySavings": 13110,
+          "monthlyNet": 12310,
+          "firstYearNet": 112720,
+          "paybackMonths": 2.843216896831844
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 258.2870418955979,
+            "p50": 358.8092527775054,
+            "p90": 488.0906314680013
+          },
+          "monthlySavings": {
+            "p10": 9734.023183744868,
+            "p50": 13774.805938182453,
+            "p90": 18938.449793045955
+          },
+          "monthlyNet": {
+            "p10": 8873.969757249313,
+            "p50": 12902.992943514218,
+            "p90": 18075.752800288912
+          },
+          "firstYearNet": {
+            "p10": 64345.30061516599,
+            "p50": 114925.32779813165,
+            "p90": 179487.3798385597
+          },
+          "paybackMonths": {
+            "p10": 1.7426723742408199,
+            "p50": 3.025500981370291,
+            "p90": 5.023659530133438
+          },
+          "iterations": 5000,
+          "seed": 2496231145,
+          "probabilityPositiveFirstYear": 1
+        },
+        "tornado": [
+          {
+            "input": "durationMinutes",
+            "lowInput": 1.5,
+            "highInput": 4,
+            "outputAtLow": 49792,
+            "outputAtHigh": 207111.99999999994,
+            "swing": 157319.99999999994
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 9000,
+            "highInput": 15000,
+            "outputAtLow": 73389.99999999997,
+            "outputAtHigh": 152050,
+            "swing": 78660.00000000003
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": 73390,
+            "outputAtHigh": 152050,
+            "swing": 78660
+          },
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": 132720,
+            "outputAtHigh": 77720,
+            "swing": 55000
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 32,
+            "highInput": 45,
+            "outputAtLow": 87880,
+            "outputAtHigh": 141700,
+            "swing": 53820
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": 118720,
+            "outputAtHigh": 104320,
+            "swing": 14400
+          },
+          {
+            "input": "errorRate",
+            "lowInput": 0.1,
+            "highInput": 0.2,
+            "outputAtLow": 105880,
+            "outputAtHigh": 119560,
+            "swing": 13680
+          }
+        ],
+        "effort": {
+          "score": 40,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 0,
+              "note": "data readiness high"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity low"
+            },
+            {
+              "factor": "integrations",
+              "points": 0,
+              "note": "1 system to integrate"
+            }
+          ]
+        },
+        "value": 100,
+        "quadrant": "quick_win"
+      }
+    },
+    {
+      "id": "sales-proposal/draft-proposal",
+      "workflowId": "sales-proposal",
+      "workflowName": "Sales proposal drafting",
+      "stepId": "draft-proposal",
+      "stepName": "Draft proposal narrative and scope",
+      "actor": "Account executive",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 55,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 1,
+            "weight": 0.35,
+            "points": 35,
+            "note": "180 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.8,
+            "weight": 0.25,
+            "points": 20,
+            "note": "20% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 68.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.7,
+            "weight": 0.35,
+            "points": 24.5,
+            "note": "generation (inferred from \"draft\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "data readiness medium"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.6,
+            "weight": 0.2,
+            "points": 12,
+            "note": "medium judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.85,
+            "weight": 0.2,
+            "points": 17,
+            "note": "regulatory sensitivity low"
+          }
+        ],
+        "task": {
+          "taskType": "generation",
+          "matched": [
+            "draft"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 69 supports automation with human review of exceptions.",
+      "guardrails": [
+        "High baseline rework: run in shadow mode and compare model error to the human baseline before cutover.",
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 3,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 30,
+            "likely": 45,
+            "high": 60
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 120,
+            "likely": 180,
+            "high": 300
+          },
+          "errorRate": {
+            "low": 0.1,
+            "likely": 0.2,
+            "high": 0.3
+          },
+          "hourlyCost": {
+            "low": 85,
+            "likely": 95,
+            "high": 110
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 97.2,
+          "monthlySavings": 9234,
+          "monthlyNet": 8434,
+          "firstYearNet": 66208,
+          "paybackMonths": 4.149869575527626
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 75.08918840561161,
+            "p50": 105.02189882931512,
+            "p90": 145.21246165317615
+          },
+          "monthlySavings": {
+            "p10": 7136.036715539746,
+            "p50": 10142.861286840807,
+            "p90": 14124.563272469411
+          },
+          "monthlyNet": {
+            "p10": 6249.234772512333,
+            "p50": 9254.524969640672,
+            "p90": 13313.264815357454
+          },
+          "firstYearNet": {
+            "p10": 32811.43673283254,
+            "p50": 72012.27603869572,
+            "p90": 121176.24521439393
+          },
+          "paybackMonths": {
+            "p10": 2.3957883490634084,
+            "p50": 4.1943045541449155,
+            "p90": 7.045540524175529
+          },
+          "iterations": 5000,
+          "seed": 2599325379,
+          "probabilityPositiveFirstYear": 0.9962
+        },
+        "tornado": [
+          {
+            "input": "durationMinutes",
+            "lowInput": 120,
+            "highInput": 300,
+            "outputAtLow": 29272,
+            "outputAtHigh": 140080,
+            "swing": 110808
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 30,
+            "highInput": 60,
+            "outputAtLow": 29272,
+            "outputAtHigh": 103144,
+            "swing": 73872
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": 38506.000000000015,
+            "outputAtHigh": 93910,
+            "swing": 55403.999999999985
+          },
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": 86208,
+            "outputAtHigh": 31208,
+            "swing": 55000
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 85,
+            "highInput": 110,
+            "outputAtLow": 54544,
+            "outputAtHigh": 83704,
+            "swing": 29160
+          },
+          {
+            "input": "errorRate",
+            "lowInput": 0.1,
+            "highInput": 0.3,
+            "outputAtLow": 56974,
+            "outputAtHigh": 75442,
+            "swing": 18468
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": 72208,
+            "outputAtHigh": 57808,
+            "swing": 14400
+          }
+        ],
+        "effort": {
+          "score": 49,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 5,
+              "note": "data readiness medium"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity low"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 74.03619975712537,
+        "quadrant": "quick_win"
+      }
+    },
+    {
+      "id": "invoice-processing/key-in",
+      "workflowId": "invoice-processing",
+      "workflowName": "Invoice processing",
+      "stepId": "key-in",
+      "stepName": "Key invoice header and line items into the ERP",
+      "actor": "AP clerk",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 16.666666666666668,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.13333333333333333,
+            "weight": 0.35,
+            "points": 4.666666666666667,
+            "note": "8 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.48,
+            "weight": 0.25,
+            "points": 12,
+            "note": "12% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 83.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.9,
+            "weight": 0.35,
+            "points": 31.5,
+            "note": "extraction (inferred from \"key\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "data readiness medium"
+          },
+          {
+            "factor": "judgment",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "low judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.85,
+            "weight": 0.2,
+            "points": 17,
+            "note": "regulatory sensitivity low"
+          }
+        ],
+        "task": {
+          "taskType": "extraction",
+          "matched": [
+            "key"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 84 supports automation with human review of exceptions.",
+      "guardrails": [
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 4,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 1500,
+            "likely": 1800,
+            "high": 2200
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 6,
+            "likely": 8,
+            "high": 12
+          },
+          "errorRate": {
+            "low": 0.08,
+            "likely": 0.12,
+            "high": 0.18
+          },
+          "hourlyCost": {
+            "low": 48,
+            "likely": 55,
+            "high": 62
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 161.28,
+          "monthlySavings": 8870.4,
+          "monthlyNet": 8070.4,
+          "firstYearNet": 61844.79999999999,
+          "paybackMonths": 4.336835844567804
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 136.15616918324488,
+            "p50": 175.9725233494955,
+            "p90": 226.40521349934286
+          },
+          "monthlySavings": {
+            "p10": 7391.7686395111605,
+            "p50": 9712.16836004694,
+            "p90": 12536.8756808354
+          },
+          "monthlyNet": {
+            "p10": 6491.957703906352,
+            "p50": 8832.793238083459,
+            "p90": 11687.048934014489
+          },
+          "firstYearNet": {
+            "p10": 34643.48238158497,
+            "p50": 66134.5309859633,
+            "p90": 102980.03412289808
+          },
+          "paybackMonths": {
+            "p10": 2.683114102543431,
+            "p50": 4.481728676902556,
+            "p90": 7.057378517952352
+          },
+          "iterations": 5000,
+          "seed": 1465690686,
+          "probabilityPositiveFirstYear": 0.9984
+        },
+        "tornado": [
+          {
+            "input": "durationMinutes",
+            "lowInput": 6,
+            "highInput": 12,
+            "outputAtLow": 35233.600000000006,
+            "outputAtHigh": 115067.20000000001,
+            "swing": 79833.6
+          },
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": 81844.79999999999,
+            "outputAtHigh": 26844.79999999999,
+            "swing": 55000
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": 35233.600000000006,
+            "outputAtHigh": 88456.00000000003,
+            "swing": 53222.40000000002
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 1500,
+            "highInput": 2200,
+            "outputAtLow": 44104,
+            "outputAtHigh": 85499.20000000003,
+            "swing": 41395.200000000026
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 48,
+            "highInput": 62,
+            "outputAtLow": 48297.28,
+            "outputAtHigh": 75392.32,
+            "swing": 27095.040000000008
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": 67844.79999999999,
+            "outputAtHigh": 53444.79999999999,
+            "swing": 14400
+          },
+          {
+            "input": "errorRate",
+            "lowInput": 0.08,
+            "highInput": 0.18,
+            "outputAtLow": 58043.20000000001,
+            "outputAtHigh": 67547.19999999998,
+            "swing": 9503.99999999997
+          }
+        ],
+        "effort": {
+          "score": 45,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 5,
+              "note": "data readiness medium"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity low"
+            },
+            {
+              "factor": "integrations",
+              "points": 0,
+              "note": "1 system to integrate"
+            }
+          ]
+        },
+        "value": 70.66234590466766,
+        "quadrant": "quick_win"
+      }
+    },
+    {
+      "id": "support-triage/escalate",
+      "workflowId": "support-triage",
+      "workflowName": "Customer support triage",
+      "stepId": "escalate",
+      "stepName": "Escalate to Tier 2 with a case summary",
+      "actor": "Tier 1 agent",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 24.416666666666664,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.11666666666666667,
+            "weight": 0.35,
+            "points": 4.083333333333333,
+            "note": "7 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.48,
+            "weight": 0.25,
+            "points": 12,
+            "note": "12% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.25,
+            "weight": 0.2,
+            "points": 5,
+            "note": "1 handoff (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0.16666666666666666,
+            "weight": 0.2,
+            "points": 3.333333333333333,
+            "note": "240 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 73.75,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.85,
+            "weight": 0.35,
+            "points": 29.75,
+            "note": "summarization (inferred from \"summary\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "data readiness medium"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.6,
+            "weight": 0.2,
+            "points": 12,
+            "note": "medium judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.85,
+            "weight": 0.2,
+            "points": 17,
+            "note": "regulatory sensitivity low"
+          }
+        ],
+        "task": {
+          "taskType": "summarization",
+          "matched": [
+            "summary"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 74 supports automation with human review of exceptions.",
+      "guardrails": [
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 5,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 9000,
+            "likely": 12000,
+            "high": 15000
+          },
+          "volumeShare": {
+            "low": 0.15,
+            "likely": 0.2,
+            "high": 0.25
+          },
+          "durationMinutes": {
+            "low": 5,
+            "likely": 7,
+            "high": 12
+          },
+          "errorRate": {
+            "low": 0.12,
+            "likely": 0.12,
+            "high": 0.12
+          },
+          "hourlyCost": {
+            "low": 32,
+            "likely": 38,
+            "high": 45
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 188.16,
+          "monthlySavings": 7150.08,
+          "monthlyNet": 6350.08,
+          "firstYearNet": 41200.95999999999,
+          "paybackMonths": 5.511741584357992
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 149.71531041784766,
+            "p50": 207.96410667202022,
+            "p90": 291.1539692702385
+          },
+          "monthlySavings": {
+            "p10": 5670.378506435627,
+            "p50": 7968.056339069768,
+            "p90": 11222.381191937884
+          },
+          "monthlyNet": {
+            "p10": 4756.965111447277,
+            "p50": 7108.135535275822,
+            "p90": 10409.46427084891
+          },
+          "firstYearNet": {
+            "p10": 13766.31273833503,
+            "p50": 46037.40941575903,
+            "p90": 87351.6536098664
+          },
+          "paybackMonths": {
+            "p10": 3.126237479624632,
+            "p50": 5.42843755090966,
+            "p90": 9.316599478143242
+          },
+          "iterations": 5000,
+          "seed": 3840264998,
+          "probabilityPositiveFirstYear": 0.9748
+        },
+        "tornado": [
+          {
+            "input": "durationMinutes",
+            "lowInput": 5,
+            "highInput": 12,
+            "outputAtLow": 16686.399999999994,
+            "outputAtHigh": 102487.36000000002,
+            "swing": 85800.96000000002
+          },
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": 61200.95999999999,
+            "outputAtHigh": 6200.959999999992,
+            "swing": 55000
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": 19750.72,
+            "outputAtHigh": 62651.20000000001,
+            "swing": 42900.48000000001
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 9000,
+            "highInput": 15000,
+            "outputAtLow": 19750.72,
+            "outputAtHigh": 62651.20000000001,
+            "swing": 42900.48000000001
+          },
+          {
+            "input": "volumeShare",
+            "lowInput": 0.15,
+            "highInput": 0.25,
+            "outputAtLow": 19750.72,
+            "outputAtHigh": 62651.20000000001,
+            "swing": 42900.48000000001
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 32,
+            "highInput": 45,
+            "outputAtLow": 27653.440000000002,
+            "outputAtHigh": 57006.40000000001,
+            "swing": 29352.960000000006
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": 47200.95999999999,
+            "outputAtHigh": 32800.95999999999,
+            "swing": 14400
+          }
+        ],
+        "effort": {
+          "score": 49,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 5,
+              "note": "data readiness medium"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity low"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 56.86508428220658,
+        "quadrant": "quick_win"
+      }
+    },
+    {
+      "id": "support-triage/account-lookup",
+      "workflowId": "support-triage",
+      "workflowName": "Customer support triage",
+      "stepId": "account-lookup",
+      "stepName": "Look up customer account and order history",
+      "actor": "Tier 1 agent",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 5.75,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.05,
+            "weight": 0.35,
+            "points": 1.75,
+            "note": "3 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.16,
+            "weight": 0.25,
+            "points": 4,
+            "note": "4% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 86.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.9,
+            "weight": 0.35,
+            "points": 31.5,
+            "note": "extraction (inferred from \"look up\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 1,
+            "weight": 0.25,
+            "points": 25,
+            "note": "data readiness high"
+          },
+          {
+            "factor": "judgment",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "low judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.5,
+            "weight": 0.2,
+            "points": 10,
+            "note": "regulatory sensitivity medium"
+          }
+        ],
+        "task": {
+          "taskType": "extraction",
+          "matched": [
+            "look up"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 87 supports automation with human review of exceptions.",
+      "guardrails": [
+        "Minimize or redact personal and regulated data before it reaches a model; confirm vendor data-retention and residency terms.",
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 6,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 9000,
+            "likely": 12000,
+            "high": 15000
+          },
+          "volumeShare": {
+            "low": 0.7,
+            "likely": 0.7,
+            "high": 0.7
+          },
+          "durationMinutes": {
+            "low": 2,
+            "likely": 3,
+            "high": 5
+          },
+          "errorRate": {
+            "low": 0.04,
+            "likely": 0.04,
+            "high": 0.04
+          },
+          "hourlyCost": {
+            "low": 32,
+            "likely": 38,
+            "high": 45
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 262.08,
+          "monthlySavings": 9959.039999999999,
+          "monthlyNet": 9159.039999999999,
+          "firstYearNet": 74908.47999999998,
+          "paybackMonths": 3.8213611906924747
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 206.94663170535776,
+            "p50": 283.24806994683763,
+            "p90": 384.1223712619903
+          },
+          "monthlySavings": {
+            "p10": 7821.9106816018175,
+            "p50": 10861.372633359359,
+            "p90": 14886.471521072743
+          },
+          "monthlyNet": {
+            "p10": 6934.350141412885,
+            "p50": 10018.158503896304,
+            "p90": 13998.109616767579
+          },
+          "firstYearNet": {
+            "p10": 41518.4851754714,
+            "p50": 80893.0662413353,
+            "p90": 129155.65318764378
+          },
+          "paybackMonths": {
+            "p10": 2.2961344322138775,
+            "p50": 3.8736659603559707,
+            "p90": 6.413474660046173
+          },
+          "iterations": 5000,
+          "seed": 352960070,
+          "probabilityPositiveFirstYear": 0.9984
+        },
+        "tornado": [
+          {
+            "input": "durationMinutes",
+            "lowInput": 2,
+            "highInput": 5,
+            "outputAtLow": 35072.31999999999,
+            "outputAtHigh": 154580.80000000002,
+            "swing": 119508.48000000003
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": 45031.36,
+            "outputAtHigh": 104785.6,
+            "swing": 59754.240000000005
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 9000,
+            "highInput": 15000,
+            "outputAtLow": 45031.36,
+            "outputAtHigh": 104785.59999999998,
+            "swing": 59754.239999999976
+          },
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": 94908.47999999998,
+            "outputAtHigh": 39908.47999999998,
+            "swing": 55000
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 32,
+            "highInput": 45,
+            "outputAtLow": 56038.72,
+            "outputAtHigh": 96923.19999999998,
+            "swing": 40884.47999999998
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": 80908.47999999998,
+            "outputAtHigh": 66508.47999999998,
+            "swing": 14400
+          }
+        ],
+        "effort": {
+          "score": 50,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 0,
+              "note": "data readiness high"
+            },
+            {
+              "factor": "regulatory",
+              "points": 6,
+              "note": "regulatory sensitivity medium"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 80.14526803117043,
+        "quadrant": "big_bet"
+      }
+    },
+    {
+      "id": "sales-proposal/security-questionnaire",
+      "workflowId": "sales-proposal",
+      "workflowName": "Sales proposal drafting",
+      "stepId": "security-questionnaire",
+      "stepName": "Answer customer security questionnaire",
+      "actor": "Solutions engineer",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 50,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 1,
+            "weight": 0.35,
+            "points": 35,
+            "note": "240 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.4,
+            "weight": 0.25,
+            "points": 10,
+            "note": "10% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.25,
+            "weight": 0.2,
+            "points": 5,
+            "note": "1 handoff (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 61.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.7,
+            "weight": 0.35,
+            "points": 24.5,
+            "note": "generation (inferred from \"draft\", \"answer\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "data readiness medium"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.6,
+            "weight": 0.2,
+            "points": 12,
+            "note": "medium judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.5,
+            "weight": 0.2,
+            "points": 10,
+            "note": "regulatory sensitivity medium"
+          }
+        ],
+        "task": {
+          "taskType": "generation",
+          "matched": [
+            "draft",
+            "answer"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "copilot",
+      "patternRationale": "Suitability 62 supports assistance but not unattended automation.",
+      "guardrails": [
+        "Minimize or redact personal and regulated data before it reaches a model; confirm vendor data-retention and residency terms."
+      ],
+      "rank": 7,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 30,
+            "likely": 45,
+            "high": 60
+          },
+          "volumeShare": {
+            "low": 0.4,
+            "likely": 0.4,
+            "high": 0.4
+          },
+          "durationMinutes": {
+            "low": 120,
+            "likely": 240,
+            "high": 480
+          },
+          "errorRate": {
+            "low": 0.1,
+            "likely": 0.1,
+            "high": 0.1
+          },
+          "hourlyCost": {
+            "low": 85,
+            "likely": 95,
+            "high": 110
+          },
+          "automationFraction": {
+            "low": 0.2,
+            "likely": 0.35,
+            "high": 0.5
+          },
+          "implementationCost": {
+            "low": 5000,
+            "likely": 12000,
+            "high": 25000
+          },
+          "monthlyRunCost": {
+            "low": 100,
+            "likely": 250,
+            "high": 500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 27.72,
+          "monthlySavings": 2633.4,
+          "monthlyNet": 2383.4,
+          "firstYearNet": 16600.800000000003,
+          "paybackMonths": 5.034824200721658
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 18.963334230477933,
+            "p50": 30.714627101835237,
+            "p90": 48.16619650474896
+          },
+          "monthlySavings": {
+            "p10": 1814.1326891386664,
+            "p50": 2956.22520289154,
+            "p90": 4657.172666264996
+          },
+          "monthlyNet": {
+            "p10": 1514.2625436709297,
+            "p50": 2670.198987694622,
+            "p90": 4364.889658115068
+          },
+          "firstYearNet": {
+            "p10": 3403.547287626768,
+            "p50": 18326.950956970122,
+            "p90": 39253.616380429994
+          },
+          "paybackMonths": {
+            "p10": 2.6373434401101217,
+            "p50": 5.1024037777535804,
+            "p90": 9.897624165275905
+          },
+          "iterations": 5000,
+          "seed": 1970419001,
+          "probabilityPositiveFirstYear": 0.9492
+        },
+        "tornado": [
+          {
+            "input": "durationMinutes",
+            "lowInput": 120,
+            "highInput": 480,
+            "outputAtLow": 800.4000000000015,
+            "outputAtHigh": 48201.600000000006,
+            "swing": 47401.200000000004
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.2,
+            "highInput": 0.5,
+            "outputAtLow": 3057.600000000002,
+            "outputAtHigh": 30144,
+            "swing": 27086.399999999998
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 30,
+            "highInput": 60,
+            "outputAtLow": 6067.200000000001,
+            "outputAtHigh": 27134.4,
+            "swing": 21067.2
+          },
+          {
+            "input": "implementationCost",
+            "lowInput": 5000,
+            "highInput": 25000,
+            "outputAtLow": 23600.800000000003,
+            "outputAtHigh": 3600.800000000003,
+            "swing": 20000
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 85,
+            "highInput": 110,
+            "outputAtLow": 13274.399999999998,
+            "outputAtHigh": 21590.399999999994,
+            "swing": 8315.999999999996
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 100,
+            "highInput": 500,
+            "outputAtLow": 18400.800000000003,
+            "outputAtHigh": 13600.800000000003,
+            "swing": 4800
+          }
+        ],
+        "effort": {
+          "score": 35,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 20,
+              "note": "copilot base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 5,
+              "note": "data readiness medium"
+            },
+            {
+              "factor": "regulatory",
+              "points": 6,
+              "note": "regulatory sensitivity medium"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 21.361591901556977,
+        "quadrant": "fill_in"
+      }
+    },
+    {
+      "id": "support-triage/route",
+      "workflowId": "support-triage",
+      "workflowName": "Customer support triage",
+      "stepId": "route",
+      "stepName": "Set priority and route to the right queue",
+      "actor": "Tier 1 agent",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 15.583333333333334,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.016666666666666666,
+            "weight": 0.35,
+            "points": 0.5833333333333334,
+            "note": "1 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.4,
+            "weight": 0.25,
+            "points": 10,
+            "note": "10% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.25,
+            "weight": 0.2,
+            "points": 5,
+            "note": "1 handoff (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 91.75,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.85,
+            "weight": 0.35,
+            "points": 29.75,
+            "note": "classification (inferred from \"route\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 1,
+            "weight": 0.25,
+            "points": 25,
+            "note": "data readiness high"
+          },
+          {
+            "factor": "judgment",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "low judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.85,
+            "weight": 0.2,
+            "points": 17,
+            "note": "regulatory sensitivity low"
+          }
+        ],
+        "task": {
+          "taskType": "classification",
+          "matched": [
+            "route"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 92 supports automation with human review of exceptions.",
+      "guardrails": [
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 8,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 9000,
+            "likely": 12000,
+            "high": 15000
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "errorRate": {
+            "low": 0.1,
+            "likely": 0.1,
+            "high": 0.1
+          },
+          "hourlyCost": {
+            "low": 32,
+            "likely": 38,
+            "high": 45
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 132,
+          "monthlySavings": 5016,
+          "monthlyNet": 4216,
+          "firstYearNet": 15592,
+          "paybackMonths": 8.301707779886147
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 107.45633178086896,
+            "p50": 130.93608292673514,
+            "p90": 157.72516583288962
+          },
+          "monthlySavings": {
+            "p10": 4022.8191096237506,
+            "p50": 4999.50442732359,
+            "p90": 6145.711359831015
+          },
+          "monthlyNet": {
+            "p10": 3131.5903569959887,
+            "p50": 4143.170018297575,
+            "p90": 5298.9681213225485
+          },
+          "firstYearNet": {
+            "p10": -10005.47509768898,
+            "p50": 10436.885007947752,
+            "p90": 29775.692240757166
+          },
+          "paybackMonths": {
+            "p10": 5.839786141559923,
+            "p50": 9.432848051849284,
+            "p90": 14.858284408802607
+          },
+          "iterations": 5000,
+          "seed": 140834043,
+          "probabilityPositiveFirstYear": 0.7468
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": 35592,
+            "outputAtHigh": -19408,
+            "swing": 55000
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": 544.0000000000073,
+            "outputAtHigh": 30640.000000000015,
+            "swing": 30096.000000000007
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 9000,
+            "highInput": 15000,
+            "outputAtLow": 544,
+            "outputAtHigh": 30640,
+            "swing": 30096
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 32,
+            "highInput": 45,
+            "outputAtLow": 6088,
+            "outputAtHigh": 26680,
+            "swing": 20592
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": 21592,
+            "outputAtHigh": 7192,
+            "swing": 14400
+          }
+        ],
+        "effort": {
+          "score": 40,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 0,
+              "note": "data readiness high"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity low"
+            },
+            {
+              "factor": "integrations",
+              "points": 0,
+              "note": "1 system to integrate"
+            }
+          ]
+        },
+        "value": 33.1453601463806,
+        "quadrant": "fill_in"
+      }
+    },
+    {
+      "id": "sales-proposal/requirements-mapping",
+      "workflowId": "sales-proposal",
+      "workflowName": "Sales proposal drafting",
+      "stepId": "requirements-mapping",
+      "stepName": "Map customer requirements to product capabilities",
+      "actor": "Solutions engineer",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 55,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 1,
+            "weight": 0.35,
+            "points": 35,
+            "note": "90 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "15% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.25,
+            "weight": 0.2,
+            "points": 5,
+            "note": "1 handoff (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 73.75,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.85,
+            "weight": 0.35,
+            "points": 29.75,
+            "note": "classification (inferred from \"categorize\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "data readiness medium"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.6,
+            "weight": 0.2,
+            "points": 12,
+            "note": "medium judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.85,
+            "weight": 0.2,
+            "points": 17,
+            "note": "regulatory sensitivity low"
+          }
+        ],
+        "task": {
+          "taskType": "classification",
+          "matched": [
+            "categorize"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 74 supports automation with human review of exceptions.",
+      "guardrails": [
+        "High baseline rework: run in shadow mode and compare model error to the human baseline before cutover.",
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 9,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 30,
+            "likely": 45,
+            "high": 60
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 60,
+            "likely": 90,
+            "high": 150
+          },
+          "errorRate": {
+            "low": 0.15,
+            "likely": 0.15,
+            "high": 0.15
+          },
+          "hourlyCost": {
+            "low": 85,
+            "likely": 95,
+            "high": 110
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 46.574999999999996,
+          "monthlySavings": 4424.625,
+          "monthlyNet": 3624.625,
+          "firstYearNet": 8495.5,
+          "paybackMonths": 9.656171328068421
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 36.29815024495748,
+            "p50": 50.36780835112437,
+            "p90": 69.5458893591986
+          },
+          "monthlySavings": {
+            "p10": 3469.7720155997417,
+            "p50": 4858.632234777729,
+            "p90": 6739.292918068661
+          },
+          "monthlyNet": {
+            "p10": 2574.3998121670593,
+            "p50": 3992.510445236136,
+            "p90": 5925.125173704862
+          },
+          "firstYearNet": {
+            "p10": -14922.009839820566,
+            "p50": 8549.434910460073,
+            "p90": 35471.608022514556
+          },
+          "paybackMonths": {
+            "p10": 5.540280609436152,
+            "p50": 9.835897403401257,
+            "p90": 17.152512019402767
+          },
+          "iterations": 5000,
+          "seed": 1592344436,
+          "probabilityPositiveFirstYear": 0.6738
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": 28495.5,
+            "outputAtHigh": -26504.5,
+            "swing": 55000
+          },
+          {
+            "input": "durationMinutes",
+            "lowInput": 60,
+            "highInput": 150,
+            "outputAtLow": -9203.000000000007,
+            "outputAtHigh": 43892.499999999985,
+            "swing": 53095.49999999999
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 30,
+            "highInput": 60,
+            "outputAtLow": -9203.000000000007,
+            "outputAtHigh": 26193.999999999985,
+            "swing": 35396.99999999999
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": -4778.375,
+            "outputAtHigh": 21769.375,
+            "swing": 26547.75
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": 14495.5,
+            "outputAtHigh": 95.5,
+            "swing": 14400
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 85,
+            "highInput": 110,
+            "outputAtLow": 2906.4999999999927,
+            "outputAtHigh": 16878.999999999985,
+            "swing": 13972.499999999993
+          }
+        ],
+        "effort": {
+          "score": 49,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 5,
+              "note": "data readiness medium"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity low"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 31.94008356188909,
+        "quadrant": "fill_in"
+      }
+    },
+    {
+      "id": "invoice-processing/match-exceptions",
+      "workflowId": "invoice-processing",
+      "workflowName": "Invoice processing",
+      "stepId": "match-exceptions",
+      "stepName": "Resolve three-way match exceptions",
+      "actor": "AP specialist",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 35.416666666666664,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.25,
+            "weight": 0.35,
+            "points": 8.75,
+            "note": "15 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.4,
+            "weight": 0.25,
+            "points": 10,
+            "note": "10% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.5,
+            "weight": 0.2,
+            "points": 10,
+            "note": "2 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0.3333333333333333,
+            "weight": 0.2,
+            "points": 6.666666666666666,
+            "note": "480 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 54.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.3,
+            "weight": 0.35,
+            "points": 10.5,
+            "note": "decision (inferred from \"decide\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "data readiness medium"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.6,
+            "weight": 0.2,
+            "points": 12,
+            "note": "medium judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.85,
+            "weight": 0.2,
+            "points": 17,
+            "note": "regulatory sensitivity low"
+          }
+        ],
+        "task": {
+          "taskType": "decision",
+          "matched": [
+            "decide"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "copilot",
+      "patternRationale": "Decision tasks stay with a named owner; AI gathers evidence.",
+      "guardrails": [
+        "Keep the decision with a named approver; log the evidence shown to them."
+      ],
+      "rank": 10,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 1500,
+            "likely": 1800,
+            "high": 2200
+          },
+          "volumeShare": {
+            "low": 0.12,
+            "likely": 0.18,
+            "high": 0.25
+          },
+          "durationMinutes": {
+            "low": 10,
+            "likely": 15,
+            "high": 30
+          },
+          "errorRate": {
+            "low": 0.1,
+            "likely": 0.1,
+            "high": 0.1
+          },
+          "hourlyCost": {
+            "low": 48,
+            "likely": 55,
+            "high": 62
+          },
+          "automationFraction": {
+            "low": 0.2,
+            "likely": 0.35,
+            "high": 0.5
+          },
+          "implementationCost": {
+            "low": 5000,
+            "likely": 12000,
+            "high": 25000
+          },
+          "monthlyRunCost": {
+            "low": 100,
+            "likely": 250,
+            "high": 500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 31.184999999999995,
+          "monthlySavings": 1715.1749999999997,
+          "monthlyNet": 1465.1749999999997,
+          "firstYearNet": 5582.0999999999985,
+          "paybackMonths": 8.190147934547069
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 24.27392813548335,
+            "p50": 37.42504716979799,
+            "p90": 58.147384585222106
+          },
+          "monthlySavings": {
+            "p10": 1317.616249980681,
+            "p50": 2055.064841684093,
+            "p90": 3220.951828566075
+          },
+          "monthlyNet": {
+            "p10": 1022.4611205603562,
+            "p50": 1768.7285585884754,
+            "p90": 2935.2402985026724
+          },
+          "firstYearNet": {
+            "p10": -3257.1120398643243,
+            "p50": 7480.341575038524,
+            "p90": 21956.277836349105
+          },
+          "paybackMonths": {
+            "p10": 4.037403930837548,
+            "p50": 7.653187387102991,
+            "p90": 14.800063829670313
+          },
+          "iterations": 5000,
+          "seed": 1378742613,
+          "probabilityPositiveFirstYear": 0.8038
+        },
+        "tornado": [
+          {
+            "input": "durationMinutes",
+            "lowInput": 10,
+            "highInput": 30,
+            "outputAtLow": -1278.5999999999985,
+            "outputAtHigh": 26164.199999999997,
+            "swing": 27442.799999999996
+          },
+          {
+            "input": "implementationCost",
+            "lowInput": 5000,
+            "highInput": 25000,
+            "outputAtLow": 12582.099999999999,
+            "outputAtHigh": -7417.9000000000015,
+            "swing": 20000
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.2,
+            "highInput": 0.5,
+            "outputAtLow": -3238.7999999999993,
+            "outputAtHigh": 14403,
+            "swing": 17641.8
+          },
+          {
+            "input": "volumeShare",
+            "lowInput": 0.12,
+            "highInput": 0.25,
+            "outputAtLow": -1278.5999999999985,
+            "outputAtHigh": 13586.25,
+            "swing": 14864.849999999999
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 1500,
+            "highInput": 2200,
+            "outputAtLow": 2151.7499999999964,
+            "outputAtHigh": 10155.900000000001,
+            "swing": 8004.150000000005
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 48,
+            "highInput": 62,
+            "outputAtLow": 2962.559999999996,
+            "outputAtHigh": 8201.64,
+            "swing": 5239.080000000004
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 100,
+            "highInput": 500,
+            "outputAtLow": 7382.0999999999985,
+            "outputAtHigh": 2582.0999999999967,
+            "swing": 4800.000000000002
+          }
+        ],
+        "effort": {
+          "score": 29,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 20,
+              "note": "copilot base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 5,
+              "note": "data readiness medium"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity low"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 14.149828468707803,
+        "quadrant": "fill_in"
+      }
+    },
+    {
+      "id": "sales-proposal/pricing-approval",
+      "workflowId": "sales-proposal",
+      "workflowName": "Sales proposal drafting",
+      "stepId": "pricing-approval",
+      "stepName": "Build pricing and approve discounts",
+      "actor": "Sales manager",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 61.25,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.75,
+            "weight": 0.35,
+            "points": 26.25,
+            "note": "45 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.2,
+            "weight": 0.25,
+            "points": 5,
+            "note": "5% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.5,
+            "weight": 0.2,
+            "points": 10,
+            "note": "2 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "1440 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 49.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.3,
+            "weight": 0.35,
+            "points": 10.5,
+            "note": "decision (inferred from \"approve\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 1,
+            "weight": 0.25,
+            "points": 25,
+            "note": "data readiness high"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.2,
+            "weight": 0.2,
+            "points": 4,
+            "note": "high judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.5,
+            "weight": 0.2,
+            "points": 10,
+            "note": "regulatory sensitivity medium"
+          }
+        ],
+        "task": {
+          "taskType": "decision",
+          "matched": [
+            "approve"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "copilot",
+      "patternRationale": "High judgment: AI assists, a person decides.",
+      "guardrails": [
+        "Minimize or redact personal and regulated data before it reaches a model; confirm vendor data-retention and residency terms.",
+        "Model drafts and cites evidence only; the accountable person makes the call.",
+        "Keep the decision with a named approver; log the evidence shown to them."
+      ],
+      "rank": 11,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 30,
+            "likely": 45,
+            "high": 60
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 30,
+            "likely": 45,
+            "high": 90
+          },
+          "errorRate": {
+            "low": 0.05,
+            "likely": 0.05,
+            "high": 0.05
+          },
+          "hourlyCost": {
+            "low": 85,
+            "likely": 95,
+            "high": 110
+          },
+          "automationFraction": {
+            "low": 0.2,
+            "likely": 0.35,
+            "high": 0.5
+          },
+          "implementationCost": {
+            "low": 5000,
+            "likely": 12000,
+            "high": 25000
+          },
+          "monthlyRunCost": {
+            "low": 100,
+            "likely": 250,
+            "high": 500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 12.403125,
+          "monthlySavings": 1178.296875,
+          "monthlyNet": 928.296875,
+          "firstYearNet": -860.4375,
+          "paybackMonths": 12.926899059096801
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 9.34173333632879,
+            "p50": 14.488082843276839,
+            "p90": 21.913156328549764
+          },
+          "monthlySavings": {
+            "p10": 896.5112608352177,
+            "p50": 1395.2423839441606,
+            "p90": 2119.880932412721
+          },
+          "monthlyNet": {
+            "p10": 609.8378119250124,
+            "p50": 1114.7937689189077,
+            "p90": 1853.3049150593738
+          },
+          "firstYearNet": {
+            "p10": -8781.778663317964,
+            "p50": -31.292202421424008,
+            "p90": 9551.331124477942
+          },
+          "paybackMonths": {
+            "p10": 6.260820873698615,
+            "p50": 12.027864414153967,
+            "p90": 24.70801173012128
+          },
+          "iterations": 5000,
+          "seed": 1975303629,
+          "probabilityPositiveFirstYear": 0.4992
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 5000,
+            "highInput": 25000,
+            "outputAtLow": 6139.5625,
+            "outputAtHigh": -13860.4375,
+            "swing": 20000
+          },
+          {
+            "input": "durationMinutes",
+            "lowInput": 30,
+            "highInput": 90,
+            "outputAtLow": -5573.625000000002,
+            "outputAtHigh": 13279.125,
+            "swing": 18852.75
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.2,
+            "highInput": 0.5,
+            "outputAtLow": -6920.25,
+            "outputAtHigh": 5199.375,
+            "swing": 12119.625
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 30,
+            "highInput": 60,
+            "outputAtLow": -5573.625000000002,
+            "outputAtHigh": 3852.7499999999964,
+            "swing": 9426.374999999998
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 100,
+            "highInput": 500,
+            "outputAtLow": 939.5625,
+            "outputAtHigh": -3860.4375,
+            "swing": 4800
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 85,
+            "highInput": 110,
+            "outputAtLow": -2348.8125,
+            "outputAtHigh": 1372.125,
+            "swing": 3720.9375
+          }
+        ],
+        "effort": {
+          "score": 30,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 20,
+              "note": "copilot base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 0,
+              "note": "data readiness high"
+            },
+            {
+              "factor": "regulatory",
+              "points": 6,
+              "note": "regulatory sensitivity medium"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 8.918350151351262,
+        "quadrant": "fill_in"
+      }
+    },
+    {
+      "id": "support-triage/refund-decision",
+      "workflowId": "support-triage",
+      "workflowName": "Customer support triage",
+      "stepId": "refund-decision",
+      "stepName": "Decide on refund or goodwill credit",
+      "actor": "Tier 1 lead",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 9.583333333333332,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.08333333333333333,
+            "weight": 0.35,
+            "points": 2.9166666666666665,
+            "note": "5 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0,
+            "weight": 0.25,
+            "points": 0,
+            "note": "0% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.25,
+            "weight": 0.2,
+            "points": 5,
+            "note": "1 handoff (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0.08333333333333333,
+            "weight": 0.2,
+            "points": 1.6666666666666665,
+            "note": "120 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 49.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.3,
+            "weight": 0.35,
+            "points": 10.5,
+            "note": "decision (inferred from \"decide\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 1,
+            "weight": 0.25,
+            "points": 25,
+            "note": "data readiness high"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.2,
+            "weight": 0.2,
+            "points": 4,
+            "note": "high judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.5,
+            "weight": 0.2,
+            "points": 10,
+            "note": "regulatory sensitivity medium"
+          }
+        ],
+        "task": {
+          "taskType": "decision",
+          "matched": [
+            "decide"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "copilot",
+      "patternRationale": "High judgment: AI assists, a person decides.",
+      "guardrails": [
+        "Minimize or redact personal and regulated data before it reaches a model; confirm vendor data-retention and residency terms.",
+        "Model drafts and cites evidence only; the accountable person makes the call.",
+        "Keep the decision with a named approver; log the evidence shown to them."
+      ],
+      "rank": 12,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 9000,
+            "likely": 12000,
+            "high": 15000
+          },
+          "volumeShare": {
+            "low": 0.08,
+            "likely": 0.08,
+            "high": 0.08
+          },
+          "durationMinutes": {
+            "low": 3,
+            "likely": 5,
+            "high": 10
+          },
+          "errorRate": {
+            "low": 0,
+            "likely": 0,
+            "high": 0
+          },
+          "hourlyCost": {
+            "low": 32,
+            "likely": 38,
+            "high": 45
+          },
+          "automationFraction": {
+            "low": 0.2,
+            "likely": 0.35,
+            "high": 0.5
+          },
+          "implementationCost": {
+            "low": 5000,
+            "likely": 12000,
+            "high": 25000
+          },
+          "monthlyRunCost": {
+            "low": 100,
+            "likely": 250,
+            "high": 500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 28,
+          "monthlySavings": 1064,
+          "monthlyNet": 814,
+          "firstYearNet": -2232,
+          "paybackMonths": 14.742014742014742
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 20.859998440744924,
+            "p50": 32.39909049036039,
+            "p90": 48.77430956269784
+          },
+          "monthlySavings": {
+            "p10": 792.507890458349,
+            "p50": 1239.9682163607854,
+            "p90": 1884.9144520851414
+          },
+          "monthlyNet": {
+            "p10": 502.0036399486947,
+            "p50": 959.616560166389,
+            "p90": 1613.6070127489722
+          },
+          "firstYearNet": {
+            "p10": -10390.382077016757,
+            "p50": -2138.106225738603,
+            "p90": 6653.254132873061
+          },
+          "paybackMonths": {
+            "p10": 7.339267465480681,
+            "p50": 14.198431406209416,
+            "p90": 30.161899389513536
+          },
+          "iterations": 5000,
+          "seed": 895093157,
+          "probabilityPositiveFirstYear": 0.3764
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 5000,
+            "highInput": 25000,
+            "outputAtLow": 4768,
+            "outputAtHigh": -15232,
+            "swing": 20000
+          },
+          {
+            "input": "durationMinutes",
+            "lowInput": 3,
+            "highInput": 10,
+            "outputAtLow": -7339.200000000002,
+            "outputAtHigh": 10536,
+            "swing": 17875.2
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.2,
+            "highInput": 0.5,
+            "outputAtLow": -7704,
+            "outputAtHigh": 3240,
+            "swing": 10944
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 9000,
+            "highInput": 15000,
+            "outputAtLow": -5424,
+            "outputAtHigh": 960,
+            "swing": 6384
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 100,
+            "highInput": 500,
+            "outputAtLow": -432,
+            "outputAtHigh": -5232,
+            "swing": 4800
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 32,
+            "highInput": 45,
+            "outputAtLow": -4248,
+            "outputAtHigh": 120,
+            "swing": 4368
+          }
+        ],
+        "effort": {
+          "score": 26,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 20,
+              "note": "copilot base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 0,
+              "note": "data readiness high"
+            },
+            {
+              "factor": "regulatory",
+              "points": 6,
+              "note": "regulatory sensitivity medium"
+            },
+            {
+              "factor": "integrations",
+              "points": 0,
+              "note": "1 system to integrate"
+            }
+          ]
+        },
+        "value": 7.676932481331113,
+        "quadrant": "fill_in"
+      }
+    },
+    {
+      "id": "invoice-processing/gl-coding",
+      "workflowId": "invoice-processing",
+      "workflowName": "Invoice processing",
+      "stepId": "gl-coding",
+      "stepName": "Assign GL codes and cost centers",
+      "actor": "AP clerk",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 9.75,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.05,
+            "weight": 0.35,
+            "points": 1.75,
+            "note": "3 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.32,
+            "weight": 0.25,
+            "points": 8,
+            "note": "8% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 83.75,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.85,
+            "weight": 0.35,
+            "points": 29.75,
+            "note": "classification (inferred from \"categorize\", \"assign\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 1,
+            "weight": 0.25,
+            "points": 25,
+            "note": "data readiness high"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.6,
+            "weight": 0.2,
+            "points": 12,
+            "note": "medium judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.85,
+            "weight": 0.2,
+            "points": 17,
+            "note": "regulatory sensitivity low"
+          }
+        ],
+        "task": {
+          "taskType": "classification",
+          "matched": [
+            "categorize",
+            "assign"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 84 supports automation with human review of exceptions.",
+      "guardrails": [
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 13,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 1500,
+            "likely": 1800,
+            "high": 2200
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 2,
+            "likely": 3,
+            "high": 5
+          },
+          "errorRate": {
+            "low": 0.08,
+            "likely": 0.08,
+            "high": 0.08
+          },
+          "hourlyCost": {
+            "low": 48,
+            "likely": 55,
+            "high": 62
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 58.32,
+          "monthlySavings": 3207.6,
+          "monthlyNet": 2407.6,
+          "firstYearNet": -6108.800000000003,
+          "paybackMonths": 14.537298554577173
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 47.99015993388763,
+            "p50": 64.43528679126717,
+            "p90": 86.2381574477422
+          },
+          "monthlySavings": {
+            "p10": 2600.996709606551,
+            "p50": 3540.9446582971823,
+            "p90": 4757.943703239056
+          },
+          "monthlyNet": {
+            "p10": 1708.5941781453541,
+            "p50": 2681.157608507275,
+            "p90": 3927.5983407445437
+          },
+          "firstYearNet": {
+            "p10": -27157.316154413,
+            "p50": -6821.515233278324,
+            "p90": 13424.987957996525
+          },
+          "paybackMonths": {
+            "p10": 8.198065583921366,
+            "p50": 14.590990918901806,
+            "p90": 26.0346394356336
+          },
+          "iterations": 5000,
+          "seed": 2313303853,
+          "probabilityPositiveFirstYear": 0.3296
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": 13891.199999999997,
+            "outputAtHigh": -41108.8,
+            "swing": 55000
+          },
+          {
+            "input": "durationMinutes",
+            "lowInput": 2,
+            "highInput": 5,
+            "outputAtLow": -18939.199999999997,
+            "outputAtHigh": 19552,
+            "swing": 38491.2
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": -15731.599999999999,
+            "outputAtHigh": 3514.0000000000073,
+            "swing": 19245.600000000006
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 1500,
+            "highInput": 2200,
+            "outputAtLow": -12524,
+            "outputAtHigh": 2444.800000000003,
+            "swing": 14968.800000000003
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": -108.80000000000291,
+            "outputAtHigh": -14508.800000000003,
+            "swing": 14400
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 48,
+            "highInput": 62,
+            "outputAtLow": -11007.68,
+            "outputAtHigh": -1209.9199999999983,
+            "swing": 9797.760000000002
+          }
+        ],
+        "effort": {
+          "score": 44,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 0,
+              "note": "data readiness high"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity low"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 21.4492608680582,
+        "quadrant": "fill_in"
+      }
+    },
+    {
+      "id": "invoice-processing/approval",
+      "workflowId": "invoice-processing",
+      "workflowName": "Invoice processing",
+      "stepId": "approval",
+      "stepName": "Approve invoices above the $5,000 threshold",
+      "actor": "Cost center manager",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 30.333333333333336,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.06666666666666667,
+            "weight": 0.35,
+            "points": 2.3333333333333335,
+            "note": "4 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.12,
+            "weight": 0.25,
+            "points": 3,
+            "note": "3% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.25,
+            "weight": 0.2,
+            "points": 5,
+            "note": "1 handoff (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "1440 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 49.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.3,
+            "weight": 0.35,
+            "points": 10.5,
+            "note": "decision (inferred from \"approve\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 1,
+            "weight": 0.25,
+            "points": 25,
+            "note": "data readiness high"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.2,
+            "weight": 0.2,
+            "points": 4,
+            "note": "high judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.5,
+            "weight": 0.2,
+            "points": 10,
+            "note": "regulatory sensitivity medium"
+          }
+        ],
+        "task": {
+          "taskType": "decision",
+          "matched": [
+            "approve"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "copilot",
+      "patternRationale": "High judgment: AI assists, a person decides.",
+      "guardrails": [
+        "Minimize or redact personal and regulated data before it reaches a model; confirm vendor data-retention and residency terms.",
+        "Model drafts and cites evidence only; the accountable person makes the call.",
+        "Keep the decision with a named approver; log the evidence shown to them."
+      ],
+      "rank": 14,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 1500,
+            "likely": 1800,
+            "high": 2200
+          },
+          "volumeShare": {
+            "low": 0.3,
+            "likely": 0.3,
+            "high": 0.3
+          },
+          "durationMinutes": {
+            "low": 2,
+            "likely": 4,
+            "high": 8
+          },
+          "errorRate": {
+            "low": 0.03,
+            "likely": 0.03,
+            "high": 0.03
+          },
+          "hourlyCost": {
+            "low": 48,
+            "likely": 55,
+            "high": 62
+          },
+          "automationFraction": {
+            "low": 0.2,
+            "likely": 0.35,
+            "high": 0.5
+          },
+          "implementationCost": {
+            "low": 5000,
+            "likely": 12000,
+            "high": 25000
+          },
+          "monthlyRunCost": {
+            "low": 100,
+            "likely": 250,
+            "high": 500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 12.978000000000002,
+          "monthlySavings": 713.7900000000001,
+          "monthlyNet": 463.7900000000001,
+          "firstYearNet": -6434.519999999999,
+          "paybackMonths": 25.87377908104961
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 9.422940295174369,
+            "p50": 14.65091173463712,
+            "p90": 22.49529235039016
+          },
+          "monthlySavings": {
+            "p10": 512.7356249573073,
+            "p50": 809.8151256556438,
+            "p90": 1240.48872665084
+          },
+          "monthlyNet": {
+            "p10": 217.270443176918,
+            "p50": 528.5784975476379,
+            "p90": 977.5932306475578
+          },
+          "firstYearNet": {
+            "p10": -14493.821345657801,
+            "p50": -7201.500150550331,
+            "p90": -250.18163730123172
+          },
+          "paybackMonths": {
+            "p10": 12.31035282042586,
+            "p50": 25.978109005954614,
+            "p90": 68.06456009013954
+          },
+          "iterations": 5000,
+          "seed": 3729509648,
+          "probabilityPositiveFirstYear": 0.094
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 5000,
+            "highInput": 25000,
+            "outputAtLow": 565.4800000000014,
+            "outputAtHigh": -19434.519999999997,
+            "swing": 20000
+          },
+          {
+            "input": "durationMinutes",
+            "lowInput": 2,
+            "highInput": 8,
+            "outputAtLow": -10717.26,
+            "outputAtHigh": 2130.9600000000028,
+            "swing": 12848.220000000003
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.2,
+            "highInput": 0.5,
+            "outputAtLow": -10105.439999999999,
+            "outputAtHigh": -2763.5999999999985,
+            "swing": 7341.84
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 100,
+            "highInput": 500,
+            "outputAtLow": -4634.519999999999,
+            "outputAtHigh": -9434.519999999999,
+            "swing": 4800
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 1500,
+            "highInput": 2200,
+            "outputAtLow": -7862.1,
+            "outputAtHigh": -4531.079999999999,
+            "swing": 3331.0200000000013
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 48,
+            "highInput": 62,
+            "outputAtLow": -7524.671999999999,
+            "outputAtHigh": -5344.367999999999,
+            "swing": 2180.304
+          }
+        ],
+        "effort": {
+          "score": 26,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 20,
+              "note": "copilot base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 0,
+              "note": "data readiness high"
+            },
+            {
+              "factor": "regulatory",
+              "points": 6,
+              "note": "regulatory sensitivity medium"
+            },
+            {
+              "factor": "integrations",
+              "points": 0,
+              "note": "1 system to integrate"
+            }
+          ]
+        },
+        "value": 4.228627980381103,
+        "quadrant": "deprioritize"
+      }
+    },
+    {
+      "id": "employee-onboarding/collect-documents",
+      "workflowId": "employee-onboarding",
+      "workflowName": "Employee onboarding",
+      "stepId": "collect-documents",
+      "stepName": "Collect and verify new-hire documents",
+      "actor": "HR coordinator",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 60.5,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.5,
+            "weight": 0.35,
+            "points": 17.5,
+            "note": "30 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.72,
+            "weight": 0.25,
+            "points": 18,
+            "note": "18% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.25,
+            "weight": 0.2,
+            "points": 5,
+            "note": "1 handoff (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "2880 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 51.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.9,
+            "weight": 0.35,
+            "points": 31.5,
+            "note": "extraction (inferred from \"extract\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.2,
+            "weight": 0.25,
+            "points": 5,
+            "note": "data readiness low"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.6,
+            "weight": 0.2,
+            "points": 12,
+            "note": "medium judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.15,
+            "weight": 0.2,
+            "points": 3,
+            "note": "regulatory sensitivity high"
+          }
+        ],
+        "task": {
+          "taskType": "extraction",
+          "matched": [
+            "extract"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "copilot",
+      "patternRationale": "High regulatory sensitivity keeps a person accountable for every output.",
+      "guardrails": [
+        "Human sign-off on every output; retain inputs, outputs, and reviewer decisions for audit.",
+        "Minimize or redact personal and regulated data before it reaches a model; confirm vendor data-retention and residency terms.",
+        "High baseline rework: run in shadow mode and compare model error to the human baseline before cutover.",
+        "Low data readiness: fix capture at the source (templates, required fields) before or alongside automation."
+      ],
+      "rank": 15,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 25,
+            "likely": 40,
+            "high": 60
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 20,
+            "likely": 30,
+            "high": 45
+          },
+          "errorRate": {
+            "low": 0.18,
+            "likely": 0.18,
+            "high": 0.18
+          },
+          "hourlyCost": {
+            "low": 45,
+            "likely": 52,
+            "high": 60
+          },
+          "automationFraction": {
+            "low": 0.2,
+            "likely": 0.35,
+            "high": 0.5
+          },
+          "implementationCost": {
+            "low": 5000,
+            "likely": 12000,
+            "high": 25000
+          },
+          "monthlyRunCost": {
+            "low": 100,
+            "likely": 250,
+            "high": 500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 8.26,
+          "monthlySavings": 429.52,
+          "monthlyNet": 179.51999999999998,
+          "firstYearNet": -9845.76,
+          "paybackMonths": 66.84491978609627
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 5.825627755878147,
+            "p50": 8.757960188052877,
+            "p90": 12.747851332639678
+          },
+          "monthlySavings": {
+            "p10": 301.96363656694746,
+            "p50": 457.3949809165598,
+            "p90": 673.662937179931
+          },
+          "monthlyNet": {
+            "p10": -13.393134576766261,
+            "p50": 181.34831166117277,
+            "p90": 414.20819736491364
+          },
+          "firstYearNet": {
+            "p10": -17999.457147782647,
+            "p50": -11339.202950348707,
+            "p90": -5908.990994983122
+          },
+          "paybackMonths": {
+            "p10": 29.884208811885742,
+            "p50": 76.15852355323975,
+            "p90": null
+          },
+          "iterations": 5000,
+          "seed": 2320517961,
+          "probabilityPositiveFirstYear": 0.0024
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 5000,
+            "highInput": 25000,
+            "outputAtLow": -2845.76,
+            "outputAtHigh": -22845.760000000002,
+            "swing": 20000
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 100,
+            "highInput": 500,
+            "outputAtLow": -8045.76,
+            "outputAtHigh": -12845.76,
+            "swing": 4800
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 25,
+            "highInput": 60,
+            "outputAtLow": -11778.6,
+            "outputAtHigh": -7268.64,
+            "swing": 4509.96
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.2,
+            "highInput": 0.5,
+            "outputAtLow": -12054.72,
+            "outputAtHigh": -7636.799999999999,
+            "swing": 4417.92
+          },
+          {
+            "input": "durationMinutes",
+            "lowInput": 20,
+            "highInput": 45,
+            "outputAtLow": -11563.84,
+            "outputAtHigh": -7268.64,
+            "swing": 4295.2
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 45,
+            "highInput": 60,
+            "outputAtLow": -10539.6,
+            "outputAtHigh": -9052.8,
+            "swing": 1486.800000000001
+          }
+        ],
+        "effort": {
+          "score": 56,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 20,
+              "note": "copilot base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 20,
+              "note": "data readiness low"
+            },
+            {
+              "factor": "regulatory",
+              "points": 12,
+              "note": "regulatory sensitivity high"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 1.450786493289382,
+        "quadrant": "deprioritize"
+      }
+    },
+    {
+      "id": "employee-onboarding/payroll-setup",
+      "workflowId": "employee-onboarding",
+      "workflowName": "Employee onboarding",
+      "stepId": "payroll-setup",
+      "stepName": "Enter new hire into payroll",
+      "actor": "Payroll specialist",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 18.75,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.25,
+            "weight": 0.35,
+            "points": 8.75,
+            "note": "15 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.2,
+            "weight": 0.25,
+            "points": 5,
+            "note": "5% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.25,
+            "weight": 0.2,
+            "points": 5,
+            "note": "1 handoff (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 79.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.9,
+            "weight": 0.35,
+            "points": 31.5,
+            "note": "extraction (declared)"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 1,
+            "weight": 0.25,
+            "points": 25,
+            "note": "data readiness high"
+          },
+          {
+            "factor": "judgment",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "low judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.15,
+            "weight": 0.2,
+            "points": 3,
+            "note": "regulatory sensitivity high"
+          }
+        ],
+        "task": {
+          "taskType": "extraction",
+          "source": "declared",
+          "matched": []
+        }
+      },
+      "pattern": "copilot",
+      "patternRationale": "High regulatory sensitivity keeps a person accountable for every output.",
+      "guardrails": [
+        "Human sign-off on every output; retain inputs, outputs, and reviewer decisions for audit.",
+        "Minimize or redact personal and regulated data before it reaches a model; confirm vendor data-retention and residency terms."
+      ],
+      "rank": 16,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 25,
+            "likely": 40,
+            "high": 60
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 10,
+            "likely": 15,
+            "high": 25
+          },
+          "errorRate": {
+            "low": 0.05,
+            "likely": 0.05,
+            "high": 0.05
+          },
+          "hourlyCost": {
+            "low": 45,
+            "likely": 52,
+            "high": 60
+          },
+          "automationFraction": {
+            "low": 0.2,
+            "likely": 0.35,
+            "high": 0.5
+          },
+          "implementationCost": {
+            "low": 5000,
+            "likely": 12000,
+            "high": 25000
+          },
+          "monthlyRunCost": {
+            "low": 100,
+            "likely": 250,
+            "high": 500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 3.675,
+          "monthlySavings": 191.1,
+          "monthlyNet": -58.900000000000006,
+          "firstYearNet": -12706.8,
+          "paybackMonths": null
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 2.6790462832019886,
+            "p50": 4.0963788779471155,
+            "p90": 6.050302553243021
+          },
+          "monthlySavings": {
+            "p10": 139.0963772730889,
+            "p50": 214.41495069383637,
+            "p90": 318.04096164846015
+          },
+          "monthlyNet": {
+            "p10": -202.06323844588994,
+            "p50": -60.66855644212171,
+            "p90": 79.55852130122817
+          },
+          "firstYearNet": {
+            "p10": -20800.620771114045,
+            "p50": -14436.11061001796,
+            "p90": -9178.361552294216
+          },
+          "paybackMonths": {
+            "p10": 169.35724219622603,
+            "p50": null,
+            "p90": null
+          },
+          "iterations": 5000,
+          "seed": 3608455117,
+          "probabilityPositiveFirstYear": 0
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 5000,
+            "highInput": 25000,
+            "outputAtLow": -5706.8,
+            "outputAtHigh": -25706.8,
+            "swing": 20000
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 100,
+            "highInput": 500,
+            "outputAtLow": -10906.8,
+            "outputAtHigh": -15706.8,
+            "swing": 4800
+          },
+          {
+            "input": "durationMinutes",
+            "lowInput": 10,
+            "highInput": 25,
+            "outputAtLow": -13471.2,
+            "outputAtHigh": -11178,
+            "swing": 2293.2000000000007
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 25,
+            "highInput": 60,
+            "outputAtLow": -13566.75,
+            "outputAtHigh": -11560.2,
+            "swing": 2006.5499999999993
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.2,
+            "highInput": 0.5,
+            "outputAtLow": -13689.6,
+            "outputAtHigh": -11724,
+            "swing": 1965.6000000000004
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 45,
+            "highInput": 60,
+            "outputAtLow": -13015.5,
+            "outputAtHigh": -12354,
+            "swing": 661.5
+          }
+        ],
+        "effort": {
+          "score": 36,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 20,
+              "note": "copilot base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 0,
+              "note": "data readiness high"
+            },
+            {
+              "factor": "regulatory",
+              "points": 12,
+              "note": "regulatory sensitivity high"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 0,
+        "quadrant": "deprioritize"
+      }
+    },
+    {
+      "id": "invoice-processing/intake",
+      "workflowId": "invoice-processing",
+      "workflowName": "Invoice processing",
+      "stepId": "intake",
+      "stepName": "Download invoice attachments from the AP inbox",
+      "actor": "AP clerk",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 3.166666666666667,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.03333333333333333,
+            "weight": 0.35,
+            "points": 1.1666666666666667,
+            "note": "2 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.08,
+            "weight": 0.25,
+            "points": 2,
+            "note": "2% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 86.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.9,
+            "weight": 0.35,
+            "points": 31.5,
+            "note": "extraction (declared)"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "data readiness medium"
+          },
+          {
+            "factor": "judgment",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "low judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "regulatory sensitivity none"
+          }
+        ],
+        "task": {
+          "taskType": "extraction",
+          "source": "declared",
+          "matched": []
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 87 supports automation with human review of exceptions.",
+      "guardrails": [
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 17,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 1500,
+            "likely": 1800,
+            "high": 2200
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 1,
+            "likely": 2,
+            "high": 3
+          },
+          "errorRate": {
+            "low": 0.02,
+            "likely": 0.02,
+            "high": 0.02
+          },
+          "hourlyCost": {
+            "low": 48,
+            "likely": 55,
+            "high": 62
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 36.72,
+          "monthlySavings": 2019.6,
+          "monthlyNet": 1219.6,
+          "firstYearNet": -20364.800000000003,
+          "paybackMonths": 28.69793374877009
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 26.080544115059066,
+            "p50": 37.03019506809412,
+            "p90": 49.696137170237975
+          },
+          "monthlySavings": {
+            "p10": 1422.0700515931285,
+            "p50": 2034.271391817306,
+            "p90": 2748.4809686980607
+          },
+          "monthlyNet": {
+            "p10": 473.2668459142255,
+            "p50": 1181.5744488636562,
+            "p90": 1938.1354309610058
+          },
+          "firstYearNet": {
+            "p10": -43067.408164829416,
+            "p50": -24875.283383879498,
+            "p90": -8443.946461356516
+          },
+          "paybackMonths": {
+            "p10": 17.25899736866118,
+            "p50": 33.89561769495363,
+            "p90": 85.67707885652243
+          },
+          "iterations": 5000,
+          "seed": 4272178131,
+          "probabilityPositiveFirstYear": 0.0204
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": -364.8000000000011,
+            "outputAtHigh": -55364.8,
+            "swing": 55000
+          },
+          {
+            "input": "durationMinutes",
+            "lowInput": 1,
+            "highInput": 3,
+            "outputAtLow": -32482.4,
+            "outputAtHigh": -8247.199999999997,
+            "swing": 24235.200000000004
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": -14364.800000000003,
+            "outputAtHigh": -28764.800000000003,
+            "swing": 14400
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": -26423.6,
+            "outputAtHigh": -14305.999999999993,
+            "swing": 12117.600000000006
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 1500,
+            "highInput": 2200,
+            "outputAtLow": -24404.000000000004,
+            "outputAtHigh": -14979.200000000004,
+            "swing": 9424.8
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 48,
+            "highInput": 62,
+            "outputAtLow": -23449.28,
+            "outputAtHigh": -17280.32,
+            "swing": 6168.959999999999
+          }
+        ],
+        "effort": {
+          "score": 45,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 5,
+              "note": "data readiness medium"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity none"
+            },
+            {
+              "factor": "integrations",
+              "points": 0,
+              "note": "1 system to integrate"
+            }
+          ]
+        },
+        "value": 9.45259559090925,
+        "quadrant": "deprioritize"
+      }
+    },
+    {
+      "id": "employee-onboarding/policy-questions",
+      "workflowId": "employee-onboarding",
+      "workflowName": "Employee onboarding",
+      "stepId": "policy-questions",
+      "stepName": "Answer policy and benefits questions",
+      "actor": "HR coordinator",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 41,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 1,
+            "weight": 0.35,
+            "points": 35,
+            "note": "60 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.24,
+            "weight": 0.25,
+            "points": 6,
+            "note": "6% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 69.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.7,
+            "weight": 0.35,
+            "points": 24.5,
+            "note": "generation (declared)"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "data readiness medium"
+          },
+          {
+            "factor": "judgment",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "low judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.5,
+            "weight": 0.2,
+            "points": 10,
+            "note": "regulatory sensitivity medium"
+          }
+        ],
+        "task": {
+          "taskType": "generation",
+          "source": "declared",
+          "matched": []
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 70 supports automation with human review of exceptions.",
+      "guardrails": [
+        "Minimize or redact personal and regulated data before it reaches a model; confirm vendor data-retention and residency terms.",
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 18,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 25,
+            "likely": 40,
+            "high": 60
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 30,
+            "likely": 60,
+            "high": 120
+          },
+          "errorRate": {
+            "low": 0.06,
+            "likely": 0.06,
+            "high": 0.06
+          },
+          "hourlyCost": {
+            "low": 45,
+            "likely": 52,
+            "high": 60
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 25.439999999999998,
+          "monthlySavings": 1322.8799999999999,
+          "monthlyNet": 522.8799999999999,
+          "firstYearNet": -28725.440000000002,
+          "paybackMonths": 66.93696450428398
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 18.818828887760166,
+            "p50": 29.50411907218783,
+            "p90": 45.67629708020446
+          },
+          "monthlySavings": {
+            "p10": 974.2826318144882,
+            "p50": 1539.6828369697673,
+            "p90": 2397.6749134838806
+          },
+          "monthlyNet": {
+            "p10": 31.7455862546462,
+            "p50": 675.0673735706088,
+            "p90": 1573.4952087108904
+          },
+          "firstYearNet": {
+            "p10": -49715.84005270593,
+            "p50": -30956.929333047552,
+            "p90": -13588.864342615097
+          },
+          "paybackMonths": {
+            "p10": 22.226273580336414,
+            "p50": 58.47038102786921,
+            "p90": 1148.5953863649554
+          },
+          "iterations": 5000,
+          "seed": 54421626,
+          "probabilityPositiveFirstYear": 0.0068
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": -8725.440000000002,
+            "outputAtHigh": -63725.44,
+            "swing": 55000
+          },
+          {
+            "input": "durationMinutes",
+            "lowInput": 30,
+            "highInput": 120,
+            "outputAtLow": -36662.72,
+            "outputAtHigh": -12850.880000000005,
+            "swing": 23811.839999999997
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": -22725.440000000002,
+            "outputAtHigh": -37125.44,
+            "swing": 14400
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 25,
+            "highInput": 60,
+            "outputAtLow": -34678.4,
+            "outputAtHigh": -20788.160000000003,
+            "swing": 13890.239999999998
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": -32694.08,
+            "outputAtHigh": -24756.800000000003,
+            "swing": 7937.279999999999
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 45,
+            "highInput": 60,
+            "outputAtLow": -30862.4,
+            "outputAtHigh": -26283.2,
+            "swing": 4579.200000000001
+          }
+        ],
+        "effort": {
+          "score": 55,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 5,
+              "note": "data readiness medium"
+            },
+            {
+              "factor": "regulatory",
+              "points": 6,
+              "note": "regulatory sensitivity medium"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 5.40053898856487,
+        "quadrant": "deprioritize"
+      }
+    },
+    {
+      "id": "sales-proposal/discovery-summary",
+      "workflowId": "sales-proposal",
+      "workflowName": "Sales proposal drafting",
+      "stepId": "discovery-summary",
+      "stepName": "Summarize discovery call notes",
+      "actor": "Account executive",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 19.583333333333336,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.4166666666666667,
+            "weight": 0.35,
+            "points": 14.583333333333334,
+            "note": "25 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.2,
+            "weight": 0.25,
+            "points": 5,
+            "note": "5% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 81.75,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.85,
+            "weight": 0.35,
+            "points": 29.75,
+            "note": "summarization (inferred from \"summarize\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "data readiness medium"
+          },
+          {
+            "factor": "judgment",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "low judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.85,
+            "weight": 0.2,
+            "points": 17,
+            "note": "regulatory sensitivity low"
+          }
+        ],
+        "task": {
+          "taskType": "summarization",
+          "matched": [
+            "summarize"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 82 supports automation with human review of exceptions.",
+      "guardrails": [
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 19,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 30,
+            "likely": 45,
+            "high": 60
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 15,
+            "likely": 25,
+            "high": 40
+          },
+          "errorRate": {
+            "low": 0.05,
+            "likely": 0.05,
+            "high": 0.05
+          },
+          "hourlyCost": {
+            "low": 85,
+            "likely": 95,
+            "high": 110
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 11.8125,
+          "monthlySavings": 1122.1875,
+          "monthlyNet": 322.1875,
+          "firstYearNet": -31133.75,
+          "paybackMonths": 108.63239573229873
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 8.488785410537472,
+            "p50": 12.288076799466209,
+            "p90": 16.838852676393397
+          },
+          "monthlySavings": {
+            "p10": 815.7139463478602,
+            "p50": 1181.5246320314604,
+            "p90": 1655.3477360134527
+          },
+          "monthlyNet": {
+            "p10": -156.1705306800773,
+            "p50": 340.2804176725223,
+            "p90": 891.3175550761057
+          },
+          "firstYearNet": {
+            "p10": -53040.982841449106,
+            "p50": -35000.5869323104,
+            "p90": -20026.50510928343
+          },
+          "paybackMonths": {
+            "p10": 40.254514140582266,
+            "p50": 116.69875490578873,
+            "p90": null
+          },
+          "iterations": 5000,
+          "seed": 696672806,
+          "probabilityPositiveFirstYear": 0.0002
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": -11133.75,
+            "outputAtHigh": -66133.75,
+            "swing": 55000
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": -25133.75,
+            "outputAtHigh": -39533.75,
+            "swing": 14400
+          },
+          {
+            "input": "durationMinutes",
+            "lowInput": 15,
+            "highInput": 40,
+            "outputAtLow": -36520.25,
+            "outputAtHigh": -23054.000000000004,
+            "swing": 13466.249999999996
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 30,
+            "highInput": 60,
+            "outputAtLow": -35622.5,
+            "outputAtHigh": -26645,
+            "swing": 8977.5
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": -34500.3125,
+            "outputAtHigh": -27767.1875,
+            "swing": 6733.125
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 85,
+            "highInput": 110,
+            "outputAtLow": -32551.25,
+            "outputAtHigh": -29007.5,
+            "swing": 3543.75
+          }
+        ],
+        "effort": {
+          "score": 49,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 5,
+              "note": "data readiness medium"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity low"
+            },
+            {
+              "factor": "integrations",
+              "points": 4,
+              "note": "2 systems to integrate"
+            }
+          ]
+        },
+        "value": 2.722243341380178,
+        "quadrant": "deprioritize"
+      }
+    },
+    {
+      "id": "employee-onboarding/first-week-plan",
+      "workflowId": "employee-onboarding",
+      "workflowName": "Employee onboarding",
+      "stepId": "first-week-plan",
+      "stepName": "Draft a personalized first-week plan",
+      "actor": "Hiring manager",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 31.25,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.75,
+            "weight": 0.35,
+            "points": 26.25,
+            "note": "45 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.2,
+            "weight": 0.25,
+            "points": 5,
+            "note": "5% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 68.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.7,
+            "weight": 0.35,
+            "points": 24.5,
+            "note": "generation (inferred from \"draft\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "data readiness medium"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.6,
+            "weight": 0.2,
+            "points": 12,
+            "note": "medium judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.85,
+            "weight": 0.2,
+            "points": 17,
+            "note": "regulatory sensitivity low"
+          }
+        ],
+        "task": {
+          "taskType": "generation",
+          "matched": [
+            "draft"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "automation_with_review",
+      "patternRationale": "Suitability 69 supports automation with human review of exceptions.",
+      "guardrails": [
+        "Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items."
+      ],
+      "rank": 20,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 25,
+            "likely": 40,
+            "high": 60
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 30,
+            "likely": 45,
+            "high": 60
+          },
+          "errorRate": {
+            "low": 0.05,
+            "likely": 0.05,
+            "high": 0.05
+          },
+          "hourlyCost": {
+            "low": 45,
+            "likely": 52,
+            "high": 60
+          },
+          "automationFraction": {
+            "low": 0.45,
+            "likely": 0.6,
+            "high": 0.75
+          },
+          "implementationCost": {
+            "low": 15000,
+            "likely": 35000,
+            "high": 70000
+          },
+          "monthlyRunCost": {
+            "low": 300,
+            "likely": 800,
+            "high": 1500
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 18.9,
+          "monthlySavings": 982.8,
+          "monthlyNet": 182.79999999999995,
+          "firstYearNet": -32806.4,
+          "paybackMonths": 191.46608315098473
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 13.9526712413593,
+            "p50": 19.237824681585437,
+            "p90": 26.03553529739585
+          },
+          "monthlySavings": {
+            "p10": 723.7190304789146,
+            "p50": 1002.6481331814539,
+            "p90": 1373.3653689088299
+          },
+          "monthlyNet": {
+            "p10": -288.6992257572619,
+            "p50": 147.9178835841126,
+            "p90": 613.489176538638
+          },
+          "firstYearNet": {
+            "p10": -54808.52418495764,
+            "p50": -37343.903198186315,
+            "p90": -22636.131200086562
+          },
+          "paybackMonths": {
+            "p10": 58.810385643975955,
+            "p50": 268.929391911451,
+            "p90": null
+          },
+          "iterations": 5000,
+          "seed": 3644153435,
+          "probabilityPositiveFirstYear": 0
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 15000,
+            "highInput": 70000,
+            "outputAtLow": -12806.400000000001,
+            "outputAtHigh": -67806.4,
+            "swing": 54999.99999999999
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 300,
+            "highInput": 1500,
+            "outputAtLow": -26806.4,
+            "outputAtHigh": -41206.4,
+            "swing": 14400
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 25,
+            "highInput": 60,
+            "outputAtLow": -37229,
+            "outputAtHigh": -26909.600000000002,
+            "swing": 10319.399999999998
+          },
+          {
+            "input": "durationMinutes",
+            "lowInput": 30,
+            "highInput": 60,
+            "outputAtLow": -36737.6,
+            "outputAtHigh": -28875.2,
+            "swing": 7862.399999999998
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.45,
+            "highInput": 0.75,
+            "outputAtLow": -35754.8,
+            "outputAtHigh": -29858,
+            "swing": 5896.800000000003
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 45,
+            "highInput": 60,
+            "outputAtLow": -34394,
+            "outputAtHigh": -30992,
+            "swing": 3402
+          }
+        ],
+        "effort": {
+          "score": 45,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 40,
+              "note": "automation_with_review base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 5,
+              "note": "data readiness medium"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity low"
+            },
+            {
+              "factor": "integrations",
+              "points": 0,
+              "note": "1 system to integrate"
+            }
+          ]
+        },
+        "value": 1.1833430686729007,
+        "quadrant": "deprioritize"
+      }
+    },
+    {
+      "id": "employee-onboarding/provision-access",
+      "workflowId": "employee-onboarding",
+      "workflowName": "Employee onboarding",
+      "stepId": "provision-access",
+      "stepName": "Request accounts and access for each system",
+      "actor": "IT support",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 45.33333333333333,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.6666666666666666,
+            "weight": 0.35,
+            "points": 23.333333333333332,
+            "note": "40 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0.48,
+            "weight": 0.25,
+            "points": 12,
+            "note": "12% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.5,
+            "weight": 0.2,
+            "points": 10,
+            "note": "2 handoffs (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 91.75,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.85,
+            "weight": 0.35,
+            "points": 29.75,
+            "note": "classification (inferred from \"route\")"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 1,
+            "weight": 0.25,
+            "points": 25,
+            "note": "data readiness high"
+          },
+          {
+            "factor": "judgment",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "low judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.85,
+            "weight": 0.2,
+            "points": 17,
+            "note": "regulatory sensitivity low"
+          }
+        ],
+        "task": {
+          "taskType": "classification",
+          "matched": [
+            "route"
+          ],
+          "source": "inferred"
+        }
+      },
+      "pattern": "agent",
+      "patternRationale": "Suitability 92 with low judgment and risk, 2 handoff(s), and 3 systems suits an agent that acts across tools.",
+      "guardrails": [
+        "Allowlist the actions the agent may take in each system, rate-limit them, log every tool call, and keep a kill switch."
+      ],
+      "rank": 21,
+      "economics": {
+        "inputs": {
+          "volumePerMonth": {
+            "low": 25,
+            "likely": 40,
+            "high": 60
+          },
+          "volumeShare": {
+            "low": 1,
+            "likely": 1,
+            "high": 1
+          },
+          "durationMinutes": {
+            "low": 25,
+            "likely": 40,
+            "high": 60
+          },
+          "errorRate": {
+            "low": 0.12,
+            "likely": 0.12,
+            "high": 0.12
+          },
+          "hourlyCost": {
+            "low": 45,
+            "likely": 52,
+            "high": 60
+          },
+          "automationFraction": {
+            "low": 0.55,
+            "likely": 0.7,
+            "high": 0.85
+          },
+          "implementationCost": {
+            "low": 40000,
+            "likely": 90000,
+            "high": 180000
+          },
+          "monthlyRunCost": {
+            "low": 800,
+            "likely": 2000,
+            "high": 4000
+          }
+        },
+        "point": {
+          "hoursSavedPerMonth": 20.90666666666667,
+          "monthlySavings": 1087.1466666666668,
+          "monthlyNet": -912.8533333333332,
+          "firstYearNet": -100954.23999999999,
+          "paybackMonths": null
+        },
+        "simulation": {
+          "hoursSavedPerMonth": {
+            "p10": 15.667639220383947,
+            "p50": 21.968538112531775,
+            "p90": 30.528067485998566
+          },
+          "monthlySavings": {
+            "p10": 806.6664468453173,
+            "p50": 1147.1741266742665,
+            "p90": 1611.3532371524009
+          },
+          "monthlyNet": {
+            "p10": -2101.182596327469,
+            "p50": -1053.2963137650092,
+            "p90": -161.70674281864603
+          },
+          "firstYearNet": {
+            "p10": -158634.16946679648,
+            "p50": -114257.86971748932,
+            "p90": -78241.22369797905
+          },
+          "paybackMonths": {
+            "p10": null,
+            "p50": null,
+            "p90": null
+          },
+          "iterations": 5000,
+          "seed": 4098565260,
+          "probabilityPositiveFirstYear": 0
+        },
+        "tornado": [
+          {
+            "input": "implementationCost",
+            "lowInput": 40000,
+            "highInput": 180000,
+            "outputAtLow": -50954.24,
+            "outputAtHigh": -190954.24,
+            "swing": 140000
+          },
+          {
+            "input": "monthlyRunCost",
+            "lowInput": 800,
+            "highInput": 4000,
+            "outputAtLow": -86554.24,
+            "outputAtHigh": -124954.24,
+            "swing": 38400
+          },
+          {
+            "input": "durationMinutes",
+            "lowInput": 25,
+            "highInput": 60,
+            "outputAtLow": -105846.4,
+            "outputAtHigh": -94431.36,
+            "swing": 11415.039999999994
+          },
+          {
+            "input": "volumePerMonth",
+            "lowInput": 25,
+            "highInput": 60,
+            "outputAtLow": -105846.4,
+            "outputAtHigh": -94431.36,
+            "swing": 11415.039999999994
+          },
+          {
+            "input": "automationFraction",
+            "lowInput": 0.55,
+            "highInput": 0.85,
+            "outputAtLow": -103749.76,
+            "outputAtHigh": -98158.72,
+            "swing": 5591.039999999994
+          },
+          {
+            "input": "hourlyCost",
+            "lowInput": 45,
+            "highInput": 60,
+            "outputAtLow": -102710.4,
+            "outputAtHigh": -98947.2,
+            "swing": 3763.199999999997
+          }
+        ],
+        "effort": {
+          "score": 73,
+          "components": [
+            {
+              "factor": "pattern",
+              "points": 65,
+              "note": "agent base effort"
+            },
+            {
+              "factor": "dataReadiness",
+              "points": 0,
+              "note": "data readiness high"
+            },
+            {
+              "factor": "regulatory",
+              "points": 0,
+              "note": "regulatory sensitivity low"
+            },
+            {
+              "factor": "integrations",
+              "points": 8,
+              "note": "3 systems to integrate"
+            }
+          ]
+        },
+        "value": 0,
+        "quadrant": "deprioritize"
+      }
+    },
+    {
+      "id": "sales-proposal/legal-review",
+      "workflowId": "sales-proposal",
+      "workflowName": "Sales proposal drafting",
+      "stepId": "legal-review",
+      "stepName": "Legal review of non-standard terms",
+      "actor": "Commercial counsel",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 60,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 1,
+            "weight": 0.35,
+            "points": 35,
+            "note": "60 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0,
+            "weight": 0.25,
+            "points": 0,
+            "note": "0% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.25,
+            "weight": 0.2,
+            "points": 5,
+            "note": "1 handoff (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "2880 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 32.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.3,
+            "weight": 0.35,
+            "points": 10.5,
+            "note": "decision (declared)"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 0.6,
+            "weight": 0.25,
+            "points": 15,
+            "note": "data readiness medium"
+          },
+          {
+            "factor": "judgment",
+            "value": 0.2,
+            "weight": 0.2,
+            "points": 4,
+            "note": "high judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 0.15,
+            "weight": 0.2,
+            "points": 3,
+            "note": "regulatory sensitivity high"
+          }
+        ],
+        "task": {
+          "taskType": "decision",
+          "source": "declared",
+          "matched": []
+        }
+      },
+      "pattern": "not_recommended",
+      "patternRationale": "Suitability 33 is below the 45 minimum.",
+      "guardrails": [],
+      "rank": null,
+      "economics": null
+    },
+    {
+      "id": "employee-onboarding/order-equipment",
+      "workflowId": "employee-onboarding",
+      "workflowName": "Employee onboarding",
+      "stepId": "order-equipment",
+      "stepName": "Order laptop and ship equipment",
+      "actor": "IT support",
+      "currency": "USD",
+      "synthetic": true,
+      "friction": {
+        "score": 13.75,
+        "factors": [
+          {
+            "factor": "time",
+            "value": 0.25,
+            "weight": 0.35,
+            "points": 8.75,
+            "note": "15 min hands-on per run (saturates at 60)"
+          },
+          {
+            "factor": "rework",
+            "value": 0,
+            "weight": 0.25,
+            "points": 0,
+            "note": "0% of runs need rework (saturates at 25%)"
+          },
+          {
+            "factor": "handoffs",
+            "value": 0.25,
+            "weight": 0.2,
+            "points": 5,
+            "note": "1 handoff (saturates at 4)"
+          },
+          {
+            "factor": "wait",
+            "value": 0,
+            "weight": 0.2,
+            "points": 0,
+            "note": "0 min waiting (saturates at 1440)"
+          }
+        ]
+      },
+      "suitability": {
+        "score": 68.5,
+        "factors": [
+          {
+            "factor": "taskType",
+            "value": 0.1,
+            "weight": 0.35,
+            "points": 3.5,
+            "note": "other (declared)"
+          },
+          {
+            "factor": "dataReadiness",
+            "value": 1,
+            "weight": 0.25,
+            "points": 25,
+            "note": "data readiness high"
+          },
+          {
+            "factor": "judgment",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "low judgment required"
+          },
+          {
+            "factor": "risk",
+            "value": 1,
+            "weight": 0.2,
+            "points": 20,
+            "note": "regulatory sensitivity none"
+          }
+        ],
+        "task": {
+          "taskType": "other",
+          "source": "declared",
+          "matched": []
+        }
+      },
+      "pattern": "not_recommended",
+      "patternRationale": "No AI-shaped task (extraction, classification, summarization, generation, decision); consider conventional automation.",
+      "guardrails": [],
+      "rank": null,
+      "economics": null
+    }
+  ],
+  "config": {
+    "friction": {
+      "weights": {
+        "time": 0.35,
+        "rework": 0.25,
+        "handoffs": 0.2,
+        "wait": 0.2
+      },
+      "saturation": {
+        "durationMinutes": 60,
+        "errorRate": 0.25,
+        "handoffs": 4,
+        "waitMinutes": 1440
+      }
+    },
+    "suitability": {
+      "weights": {
+        "taskType": 0.35,
+        "dataReadiness": 0.25,
+        "judgment": 0.2,
+        "risk": 0.2
+      },
+      "taskTypeFit": {
+        "extraction": 0.9,
+        "classification": 0.85,
+        "summarization": 0.85,
+        "generation": 0.7,
+        "decision": 0.3,
+        "other": 0.1
+      },
+      "dataReadiness": {
+        "low": 0.2,
+        "medium": 0.6,
+        "high": 1
+      },
+      "judgment": {
+        "low": 1,
+        "medium": 0.6,
+        "high": 0.2
+      },
+      "risk": {
+        "none": 1,
+        "low": 0.85,
+        "medium": 0.5,
+        "high": 0.15
+      }
+    },
+    "patterns": {
+      "thresholds": {
+        "minSuitability": 45,
+        "automationSuitability": 65,
+        "agentSuitability": 80,
+        "agentMinSystems": 2,
+        "agentMinHandoffs": 1
+      },
+      "automationFraction": {
+        "copilot": {
+          "low": 0.2,
+          "likely": 0.35,
+          "high": 0.5
+        },
+        "automation_with_review": {
+          "low": 0.45,
+          "likely": 0.6,
+          "high": 0.75
+        },
+        "agent": {
+          "low": 0.55,
+          "likely": 0.7,
+          "high": 0.85
+        }
+      },
+      "implementationCost": {
+        "copilot": {
+          "low": 5000,
+          "likely": 12000,
+          "high": 25000
+        },
+        "automation_with_review": {
+          "low": 15000,
+          "likely": 35000,
+          "high": 70000
+        },
+        "agent": {
+          "low": 40000,
+          "likely": 90000,
+          "high": 180000
+        }
+      },
+      "monthlyRunCost": {
+        "copilot": {
+          "low": 100,
+          "likely": 250,
+          "high": 500
+        },
+        "automation_with_review": {
+          "low": 300,
+          "likely": 800,
+          "high": 1500
+        },
+        "agent": {
+          "low": 800,
+          "likely": 2000,
+          "high": 4000
+        }
+      }
+    },
+    "effort": {
+      "base": {
+        "copilot": 20,
+        "automation_with_review": 40,
+        "agent": 65
+      },
+      "dataReadinessPenalty": {
+        "low": 20,
+        "medium": 5,
+        "high": 0
+      },
+      "regulatoryPenalty": {
+        "none": 0,
+        "low": 0,
+        "medium": 6,
+        "high": 12
+      },
+      "perExtraSystemPenalty": 4
+    },
+    "prioritization": {
+      "valueCapAnnual": 150000,
+      "valueThreshold": 50,
+      "effortThreshold": 50,
+      "maxPaybackMonths": 18
+    },
+    "simulation": {
+      "iterations": 5000,
+      "seed": 42
+    }
+  }
+}

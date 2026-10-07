@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 560" width="820" height="560" font-family="Helvetica, Arial, sans-serif" role="img" aria-labelledby="quadrant-title">
+<title id="quadrant-title">Value versus effort for 21 recommended AI opportunities</title>
+<rect width="820" height="560" fill="#ffffff"/>
+<rect x="64.0" y="48.0" width="230.0" height="220.0" fill="#ecfdf5"/>
+<text x="72.0" y="66.0" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="start">Quick wins</text>
+<rect x="294.0" y="48.0" width="230.0" height="220.0" fill="#eff6ff"/>
+<text x="516.0" y="66.0" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="end">Big bets</text>
+<rect x="64.0" y="268.0" width="230.0" height="220.0" fill="#f9fafb"/>
+<text x="72.0" y="478.0" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="start">Fill-ins</text>
+<rect x="294.0" y="268.0" width="230.0" height="220.0" fill="#fef2f2"/>
+<text x="516.0" y="478.0" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="end">Deprioritize</text>
+<rect x="64" y="48" width="460" height="440" fill="none" stroke="#9ca3af"/>
+<line x1="294.0" y1="48" x2="294.0" y2="488" stroke="#9ca3af" stroke-dasharray="4 4"/>
+<line x1="64" y1="268.0" x2="524" y2="268.0" stroke="#9ca3af" stroke-dasharray="4 4"/>
+<text x="64.0" y="506" font-size="11" fill="#4b5563" text-anchor="middle">0</text>
+<text x="56" y="492.0" font-size="11" fill="#4b5563" text-anchor="end">0</text>
+<text x="179.0" y="506" font-size="11" fill="#4b5563" text-anchor="middle">25</text>
+<text x="56" y="382.0" font-size="11" fill="#4b5563" text-anchor="end">25</text>
+<text x="294.0" y="506" font-size="11" fill="#4b5563" text-anchor="middle">50</text>
+<text x="56" y="272.0" font-size="11" fill="#4b5563" text-anchor="end">50</text>
+<text x="409.0" y="506" font-size="11" fill="#4b5563" text-anchor="middle">75</text>
+<text x="56" y="162.0" font-size="11" fill="#4b5563" text-anchor="end">75</text>
+<text x="524.0" y="506" font-size="11" fill="#4b5563" text-anchor="middle">100</text>
+<text x="56" y="52.0" font-size="11" fill="#4b5563" text-anchor="end">100</text>
+<text x="294" y="538" font-size="13" fill="#111827" text-anchor="middle">Effort score (higher = harder)</text>
+<text transform="translate(18 268) rotate(-90)" font-size="13" fill="#111827" text-anchor="middle">Value score (P50 annual net savings vs cap)</text>
+<text x="64" y="28" font-size="16" font-weight="bold" fill="#111827">AI opportunities: value vs effort</text>
+<g class="opportunity"><title>#1 Customer support triage: Draft first response</title><circle cx="289.4" cy="66.0" r="18.0" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="289.4" y="70.0" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">1</text></g>
+<g class="opportunity"><title>#2 Customer support triage: Read new ticket and tag product area and intent</title><circle cx="248.0" cy="61.9" r="13.9" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="248.0" y="65.9" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">2</text></g>
+<g class="opportunity"><title>#3 Sales proposal drafting: Draft proposal narrative and scope</title><circle cx="289.4" cy="162.2" r="10.2" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="289.4" y="166.2" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">3</text></g>
+<g class="opportunity"><title>#4 Invoice processing: Key invoice header and line items into the ERP</title><circle cx="271.0" cy="177.1" r="11.5" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="271.0" y="181.1" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">4</text></g>
+<g class="opportunity"><title>#5 Customer support triage: Escalate to Tier 2 with a case summary</title><circle cx="289.4" cy="237.8" r="12.0" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="289.4" y="241.8" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">5</text></g>
+<g class="opportunity"><title>#6 Customer support triage: Look up customer account and order history</title><circle cx="294.0" cy="135.4" r="13.0" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="294.0" y="139.4" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">6</text></g>
+<g class="opportunity"><title>#7 Sales proposal drafting: Answer customer security questionnaire</title><circle cx="225.0" cy="394.0" r="8.3" fill="#2563eb" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="225.0" y="398.0" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">7</text></g>
+<g class="opportunity"><title>#8 Customer support triage: Set priority and route to the right queue</title><circle cx="248.0" cy="342.2" r="10.7" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="248.0" y="346.2" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">8</text></g>
+<g class="opportunity"><title>#9 Sales proposal drafting: Map customer requirements to product capabilities</title><circle cx="289.4" cy="347.5" r="8.9" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="289.4" y="351.5" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">9</text></g>
+<g class="opportunity"><title>#10 Invoice processing: Resolve three-way match exceptions</title><circle cx="197.4" cy="425.7" r="8.5" fill="#2563eb" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="197.4" y="429.7" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">10</text></g>
+<g class="opportunity"><title>#11 Sales proposal drafting: Build pricing and approve discounts</title><circle cx="202.0" cy="448.8" r="7.6" fill="#2563eb" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="202.0" y="452.8" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">11</text></g>
+<g class="opportunity"><title>#12 Customer support triage: Decide on refund or goodwill credit</title><circle cx="183.6" cy="454.2" r="8.4" fill="#2563eb" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="183.6" y="458.2" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">12</text></g>
+<g class="opportunity"><title>#13 Invoice processing: Assign GL codes and cost centers</title><circle cx="266.4" cy="393.6" r="9.3" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="266.4" y="397.6" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">13</text></g>
+<g class="opportunity"><title>#14 Invoice processing: Approve invoices above the $5,000 threshold (parked: payback)</title><circle cx="186.5" cy="473.2" r="7.6" fill="#ffffff" stroke="#2563eb" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="186.5" y="477.2" font-size="9" font-weight="bold" fill="#2563eb" text-anchor="middle">14</text></g>
+<g class="opportunity"><title>#15 Employee onboarding: Collect and verify new-hire documents (parked: payback)</title><circle cx="321.6" cy="480.8" r="7.2" fill="#ffffff" stroke="#2563eb" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="321.6" y="484.8" font-size="9" font-weight="bold" fill="#2563eb" text-anchor="middle">15</text></g>
+<g class="opportunity"><title>#16 Employee onboarding: Enter new hire into payroll (parked: payback)</title><circle cx="229.6" cy="481.2" r="6.8" fill="#ffffff" stroke="#2563eb" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="229.6" y="485.2" font-size="9" font-weight="bold" fill="#2563eb" text-anchor="middle">16</text></g>
+<g class="opportunity"><title>#17 Invoice processing: Download invoice attachments from the AP inbox (parked: payback)</title><circle cx="271.0" cy="446.4" r="8.5" fill="#ffffff" stroke="#059669" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="271.0" y="450.4" font-size="9" font-weight="bold" fill="#059669" text-anchor="middle">17</text></g>
+<g class="opportunity"><title>#18 Employee onboarding: Answer policy and benefits questions (parked: payback)</title><circle cx="317.0" cy="464.2" r="8.3" fill="#ffffff" stroke="#059669" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="317.0" y="468.2" font-size="9" font-weight="bold" fill="#059669" text-anchor="middle">18</text></g>
+<g class="opportunity"><title>#19 Sales proposal drafting: Summarize discovery call notes (parked: payback)</title><circle cx="289.4" cy="476.0" r="7.5" fill="#ffffff" stroke="#059669" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="289.4" y="480.0" font-size="9" font-weight="bold" fill="#059669" text-anchor="middle">19</text></g>
+<g class="opportunity"><title>#20 Employee onboarding: Draft a personalized first-week plan (parked: payback)</title><circle cx="271.0" cy="480.2" r="7.8" fill="#ffffff" stroke="#059669" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="271.0" y="484.2" font-size="9" font-weight="bold" fill="#059669" text-anchor="middle">20</text></g>
+<g class="opportunity"><title>#21 Employee onboarding: Request accounts and access for each system (parked: payback)</title><circle cx="399.8" cy="480.1" r="7.9" fill="#ffffff" stroke="#d97706" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="399.8" y="484.1" font-size="9" font-weight="bold" fill="#d97706" text-anchor="middle">21</text></g>
+<text x="556" y="52" font-size="12" font-weight="bold" fill="#111827">Pattern</text>
+<circle cx="562" cy="66" r="6" fill="#2563eb" fill-opacity="0.82"/>
+<text x="574" y="70" font-size="12" fill="#374151">Copilot</text>
+<circle cx="562" cy="84" r="6" fill="#059669" fill-opacity="0.82"/>
+<text x="574" y="88" font-size="12" fill="#374151">Automation with review</text>
+<circle cx="562" cy="102" r="6" fill="#d97706" fill-opacity="0.82"/>
+<text x="574" y="106" font-size="12" fill="#374151">Agent</text>
+<text x="556" y="124" font-size="11" fill="#6b7280">Size = P50 hours saved per month</text>
+<text x="556" y="140" font-size="11" fill="#6b7280">Hollow = parked, P50 payback &gt; 18 mo</text>
+<text x="556" y="166" font-size="12" font-weight="bold" fill="#111827">Rank</text>
+<text x="556" y="181" font-size="10.5" fill="#374151">1. Draft first response</text>
+<text x="556" y="196" font-size="10.5" fill="#374151">2. Read new ticket and tag product area an…</text>
+<text x="556" y="211" font-size="10.5" fill="#374151">3. Draft proposal narrative and scope</text>
+<text x="556" y="226" font-size="10.5" fill="#374151">4. Key invoice header and line items into…</text>
+<text x="556" y="241" font-size="10.5" fill="#374151">5. Escalate to Tier 2 with a case summary</text>
+<text x="556" y="256" font-size="10.5" fill="#374151">6. Look up customer account and order hist…</text>
+<text x="556" y="271" font-size="10.5" fill="#374151">7. Answer customer security questionnaire</text>
+<text x="556" y="286" font-size="10.5" fill="#374151">8. Set priority and route to the right que…</text>
+<text x="556" y="301" font-size="10.5" fill="#374151">9. Map customer requirements to product ca…</text>
+<text x="556" y="316" font-size="10.5" fill="#374151">10. Resolve three-way match exceptions</text>
+<text x="556" y="331" font-size="10.5" fill="#374151">11. Build pricing and approve discounts</text>
+<text x="556" y="346" font-size="10.5" fill="#374151">12. Decide on refund or goodwill credit</text>
+<text x="556" y="361" font-size="10.5" fill="#374151">13. Assign GL codes and cost centers</text>
+<text x="556" y="376" font-size="10.5" fill="#374151">14. Approve invoices above the $5,000 thres…</text>
+<text x="556" y="391" font-size="10.5" fill="#374151">15. Collect and verify new-hire documents</text>
+<text x="556" y="406" font-size="10.5" fill="#374151">16. Enter new hire into payroll</text>
+<text x="556" y="421" font-size="10.5" fill="#374151">17. Download invoice attachments from the A…</text>
+<text x="556" y="436" font-size="10.5" fill="#374151">18. Answer policy and benefits questions</text>
+<text x="556" y="451" font-size="10.5" fill="#374151">19. Summarize discovery call notes</text>
+<text x="556" y="466" font-size="10.5" fill="#374151">20. Draft a personalized first-week plan</text>
+<text x="556" y="481" font-size="10.5" fill="#374151">21. Request accounts and access for each sy…</text>
+</svg>
