@@ -1,0 +1,14 @@
+SYNTHETIC interview notes, written for demonstration. No real company or person.
+
+Process: Invoice processing
+Team: Accounts Payable
+Volume: roughly 1,800 invoices a month, somewhere between 1,500 and 2,200 depending on quarter end
+Loaded cost: about $55/hour, $48 to $62 across the team
+
+What the AP lead walked us through:
+1. AP clerk downloads invoice PDFs from the shared Outlook inbox. About 2 minutes each.
+2. Clerk keys the header and line items into SAP. Takes 6-12 minutes; around 12% need rework because of typos or wrong vendor.
+3. Clerk assigns GL codes using the vendor history spreadsheet in Excel, 3 min.
+4. Specialist resolves match exceptions in SAP and sends to purchasing when the PO is wrong; they decide whether to hold. 15 minutes, and it often waits 8 hours for a reply.
+5. Cost center manager approves anything over $5k for SOX. 4 min of work but it sits for a day waiting.
+6. Payment run is scheduled in SAP and runs automatically overnight.
