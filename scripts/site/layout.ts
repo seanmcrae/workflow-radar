@@ -78,6 +78,7 @@ export const NAV: NavItem[] = [
   { href: "index.html#quickstart", label: "Quickstart" },
   { href: "index.html#results", label: "Results" },
   { href: "index.html#sample-report", label: "Sample report" },
+  { href: "index.html#evaluation", label: "Evaluation" },
   { href: "index.html#architecture", label: "Architecture" },
   { href: "index.html#limitations", label: "Limitations" },
   { href: "product.html", label: "Product brief" },

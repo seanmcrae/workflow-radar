@@ -40,6 +40,16 @@ export function diagramHtml(source: string, title: string): string {
 </figure>`;
 }
 
+/** GitHub-style heading anchor, so `PRODUCT.md#section` links keep working on the site. */
+export function slug(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s/g, "-");
+}
+
 export function renderMarkdown(markdown: string, fromDir: "" | "docs"): string {
   const marked = new Marked({
     gfm: true,
@@ -50,6 +60,10 @@ export function renderMarkdown(markdown: string, fromDir: "" | "docs"): string {
       }
     },
     renderer: {
+      heading({ tokens, depth }) {
+        const text = this.parser.parseInline(tokens);
+        return `<h${depth} id="${slug(text)}">${text}</h${depth}>\n`;
+      },
       code({ text, lang }) {
         if (lang === "mermaid") return diagramHtml(text, "Architecture diagram");
         const cls = lang === undefined || lang === "" ? "" : ` class="language-${escapeXml(lang)}"`;

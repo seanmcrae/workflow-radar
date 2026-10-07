@@ -217,6 +217,7 @@ export async function buildSite(outDir: string): Promise<SiteBuild> {
       quickstart(),
       results(result, s, reportOutput, scoreOutput),
       sampleReport(),
+      readmeSection(readme, "How evaluation works", "evaluation"),
       readmeSection(readme, "Architecture", "architecture"),
       readmeSection(readme, "Design decisions", "design"),
       readmeSection(readme, "Data", "data"),

@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format follows [Kee
 ### Added
 
 - Static documentation site (`npm run site`) with the generated sample report embedded, deployed to GitHub Pages from `main`.
+- README sections for headline results, features, a results table, how evaluation works, and project layout, plus docs, license, and Node.js badges.
 - Contributing guide, security policy, citation metadata, issue and pull request templates, and Dependabot configuration.
 
 ### Fixed

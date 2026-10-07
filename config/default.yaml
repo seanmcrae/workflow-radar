@@ -1,4 +1,4 @@
-# Default scoring configuration for ai-workflow-audit.
+# Default scoring configuration for workflow-radar.
 # Copy this file, change what you need, and pass it with `--config`.
 # Any key you omit falls back to the default shown here.
 

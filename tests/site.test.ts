@@ -10,6 +10,7 @@ import {
   markdownSection,
   renderMarkdown,
   siteHref,
+  slug,
   withoutTitle,
 } from "../scripts/site/markdown.js";
 
@@ -79,6 +80,8 @@ describe("markdown rendering", () => {
     );
     expect(() => markdownSection(readme, "No such section")).toThrow(/not found/);
     expect(withoutTitle("# Title\n\nbody")).toBe("body");
+    expect(slug("Users and jobs <code>to</code> be done")).toBe("users-and-jobs-to-be-done");
+    expect(slug("Now / next / later")).toBe("now--next--later");
   });
 });
 
@@ -115,6 +118,7 @@ describe("site build", () => {
     expect(index.match(/https:\/\/cdn\./g)).toHaveLength(1);
 
     const product = readFileSync(join(out, "product.html"), "utf8");
-    expect(product).toContain("<h2>Success metrics and evals</h2>");
+    expect(product).toContain('<h2 id="success-metrics-and-evals">Success metrics and evals</h2>');
+    expect(index).toContain('href="product.html#success-metrics-and-evals"');
   }, 60_000);
 });

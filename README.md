@@ -1,19 +1,34 @@
 # workflow-radar
 
-![CI](https://github.com/seanmcrae/workflow-radar/actions/workflows/ci.yml/badge.svg)
+[![CI](https://github.com/seanmcrae/workflow-radar/actions/workflows/ci.yml/badge.svg)](https://github.com/seanmcrae/workflow-radar/actions/workflows/ci.yml)
+[![Docs](https://github.com/seanmcrae/workflow-radar/actions/workflows/pages.yml/badge.svg)](https://seanmcrae.github.io/workflow-radar/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node.js 20+](https://img.shields.io/badge/node-%3E%3D20-339933.svg)](package.json)
+
+Rank AI opportunities in business workflows by measured friction, AI suitability, and Monte Carlo ROI, with every score explained.
+
+**Live docs:** [seanmcrae.github.io/workflow-radar](https://seanmcrae.github.io/workflow-radar/): results, the full sample report, architecture, and the product brief.
 
 A command-line tool for running an AI-opportunity audit of business workflows. You describe each workflow as a list of steps (who does it, how long it takes, how often it is redone, how many handoffs, what data it uses, how much judgment and regulatory exposure it carries), and workflow-radar scores friction and AI suitability, recommends a delivery pattern with guardrails, estimates ROI as a P10/P50/P90 range with a seeded Monte Carlo simulation, and writes a prioritized roadmap as Markdown, self-contained HTML, SVG, and JSON. Every score is a transparent weighted sum whose weights live in a config file, and every number in the report can be traced back to the inputs that produced it. The aim is to pick AI initiatives by measured friction and expected value rather than by whichever demo was most impressive.
 
+**Headline result** (bundled synthetic workflows, default config, 5,000 iterations, seed 42): 21 of 23 human steps get a recommended AI pattern, but only 6 land in Now or Next. The top quick win, drafting first responses to support tickets, frees a median 837 hours a month and pays back in 1.2 months (P50). The three highest-friction steps (pricing approval, new-hire document collection, legal review) rank Later, Park, and not recommended, because judgment, regulation, or low volume caps what AI can return on them.
+
+![Value vs effort quadrant for the bundled synthetic workflows](docs/img/quadrant.svg)
+
+Marker size is P50 hours saved per month; hollow markers are opportunities parked because their median payback exceeds the 18-month horizon. The chart is generated in code as inline SVG (no charting library, no CDN).
+
 ## Quickstart
 
-Requires Node.js 20 or later.
+Requires Node.js 20 or later. One command installs, builds, and audits the bundled examples into `report/`:
 
 ```bash
-git clone https://github.com/seanmcrae/workflow-radar.git
-cd workflow-radar
-npm ci
-npm run build
+git clone https://github.com/seanmcrae/workflow-radar.git && cd workflow-radar
+npm ci && npm run demo
+```
 
+Then run the commands individually:
+
+```bash
 # Score one workflow step by step (add --explain for factor-level detail)
 node dist/cli.js score examples/invoice.yaml
 
@@ -24,7 +39,18 @@ node dist/cli.js report examples/*.yaml --out report
 node dist/cli.js parse examples/notes/invoice-interview.txt --out draft.yaml
 ```
 
-After `npm link` (or a global install) the same commands are available as `audit score ...` / `workflow-radar score ...`. `npm run demo` builds and runs the report command; `npm run sample` regenerates the committed sample report.
+After `npm link` (or a global install) the same commands are available as `audit score ...` / `workflow-radar score ...`. `npm run sample` regenerates the committed sample report and `npm run site` builds the documentation site into `site/`.
+
+## Features
+
+- **Validated workflow model.** YAML or JSON, checked by zod; every uncertain input can be a three-point range; unknown keys and out-of-range values fail with field paths.
+- **Explainable scores.** Friction and AI suitability are weighted sums whose weights live in config; every factor's points and a one-line reason are in the output.
+- **Pattern rules with guardrails.** Copilot, automation with review, or agent, chosen by ordered hard rules (task type, regulation, judgment) before any threshold, with guardrail notes for risky steps.
+- **Monte Carlo ROI.** Seeded triangular sampling gives P10/P50/P90 hours saved, net savings, payback, and the probability that first-year net is positive.
+- **Sensitivity.** One-at-a-time tornado analysis shows which input moves the answer, so the team knows what to measure before funding.
+- **Roadmap.** Value-versus-effort quadrants plus a payback gate produce a ranked Now / Next / Later / Park plan.
+- **Interview-notes parser.** Offline heuristic parser by default; Anthropic and OpenAI adapters behind one interface, opt-in by API key.
+- **Portable, reproducible reports.** Markdown, self-contained HTML, SVG, and JSON; the same inputs and seed produce byte-identical files.
 
 ## Example output
 
@@ -96,13 +122,44 @@ Volume 1,800 (1,500–2,200) / month · workflow friction 16.8
    guardrail: Route low-confidence outputs to a review queue and sample-audit a fixed share of auto-accepted items.
 ```
 
-The quadrant chart is generated in code as inline SVG (no charting library, no CDN). Marker size is P50 hours saved per month; hollow markers are opportunities parked because their median payback exceeds the 18-month horizon.
-
-![Value vs effort quadrant for the bundled synthetic workflows](docs/img/quadrant.svg)
-
 The full generated report is committed under [`docs/sample-report/`](docs/sample-report/): [`report.md`](docs/sample-report/report.md), [`report.html`](docs/sample-report/report.html) (open locally; it has no external dependencies), and the machine-readable [`audit.json`](docs/sample-report/audit.json).
 
 One pattern the synthetic data makes visible: the steps with the highest per-run friction (legal review, document collection, pricing approval, all around 60) are not the best AI opportunities. Low-friction steps at high volume (support replies at 12,000 tickets a month) dominate value, while the high-friction steps are blocked by judgment, regulation, or low volume. That gap between "feels painful" and "pays back" is the reason the tool scores friction, suitability, and value separately.
+
+## Results
+
+Now and Next opportunities on the bundled **synthetic** workflows (`examples/*.yaml`), default config, 5,000 Monte Carlo iterations per opportunity, seed 42. Copied from [`docs/sample-report/audit.json`](docs/sample-report/audit.json), which `npm run sample` regenerates; the [live docs](https://seanmcrae.github.io/workflow-radar/#results) rebuild this table from the code on every push.
+
+| #   | Phase | Opportunity                                                              | Pattern                | Hours/mo P50 | First-year net P10 / P50 / P90 | Payback P50 | P(net > 0) |
+| --- | ----- | ------------------------------------------------------------------------ | ---------------------- | -----------: | -----------------------------: | ----------: | ---------: |
+| 1   | Now   | Customer support triage: Draft first response                            | Automation with review |          837 | $225,482 / $333,756 / $480,520 |      1.2 mo |       100% |
+| 2   | Now   | Customer support triage: Read new ticket and tag product area and intent | Automation with review |          359 |  $64,345 / $114,925 / $179,487 |      3.0 mo |       100% |
+| 3   | Now   | Sales proposal drafting: Draft proposal narrative and scope              | Automation with review |          105 |   $32,811 / $72,012 / $121,176 |      4.2 mo |       100% |
+| 4   | Now   | Invoice processing: Key invoice header and line items into the ERP       | Automation with review |          176 |   $34,643 / $66,135 / $102,980 |      4.5 mo |       100% |
+| 5   | Now   | Customer support triage: Escalate to Tier 2 with a case summary          | Automation with review |          208 |    $13,766 / $46,037 / $87,352 |      5.4 mo |        97% |
+| 6   | Next  | Customer support triage: Look up customer account and order history      | Automation with review |          283 |   $41,518 / $80,893 / $129,156 |      3.9 mo |       100% |
+
+Of the remaining steps, 7 are Later (fill-ins), 8 are parked, and 2 are not recommended at all. These figures illustrate the method on invented data; they are not measurements of any real organization.
+
+## How evaluation works
+
+Each human step is scored independently, then ranked:
+
+1. **Friction (0-100)** is a weighted average of hands-on minutes, rework rate, handoffs, and wait time, each normalized against a saturation point (60 minutes, 25% rework, 4 handoffs, 1,440 minutes by default).
+2. **AI suitability (0-100)** is a weighted average of task-type fit (extraction and classification high, decisions low), data readiness, judgment (inverted), and regulatory sensitivity (inverted).
+3. **Pattern** comes from ordered hard rules first (no AI-shaped task, or suitability below the minimum, means not recommended; high regulation, high judgment, or a decision task caps the step at copilot), then suitability thresholds.
+4. **ROI** samples every three-point input from a triangular distribution: hours saved = volume x share of runs x minutes x (1 + rework rate) / 60 x automation fraction, and first-year net = 12 x (hours saved x loaded hourly cost - monthly run cost) - implementation cost. Each opportunity gets its own seeded stream, so adding a workflow never changes another's numbers.
+5. **Prioritization** maps P50 annual net savings to a value score, combines pattern, data readiness, regulation, and system count into an effort score, places each step in a quadrant, and parks anything whose median payback exceeds the horizon.
+
+How the tool checks itself, in this repository:
+
+- Scoring math is pinned by unit tests with hand-computed expected values (friction, suitability, effort, quadrant edges, value cap).
+- Monte Carlo tests cover determinism per seed, percentile ordering, degenerate ranges collapsing to the point estimate, and the triangular sampler's mean.
+- The heuristic parser is evaluated field by field against synthetic interview notes and must produce a schema-valid workflow.
+- Hosted LLM adapters are tested against recorded-shape responses through an injected `fetch`, including HTTP errors and malformed content.
+- CLI integration tests run `score`, `report`, and `parse` in-process and require byte-identical reports for a fixed seed; the site build test requires the embedded report to equal the committed sample.
+
+How a team would measure it in use (estimate accuracy, interval calibration, draft acceptance rate) is defined in [docs/PRODUCT.md](docs/PRODUCT.md#success-metrics-and-evals).
 
 ## Workflow format
 
@@ -196,6 +253,24 @@ prioritization:
 
 `--seed` and `--iterations` override the simulation settings for a single run.
 
+## Project layout
+
+```text
+src/
+  domain/       workflow and step schemas, three-point estimates, YAML/JSON loading
+  scoring/      friction, task-type classifier, AI suitability
+  roi/          ROI equations, seeded PRNG, Monte Carlo summary, tornado sensitivity
+  prioritize/   pattern rules, guardrails, effort, quadrants, audit orchestration
+  parse/        NotesProvider interface, heuristic parser, Anthropic and OpenAI adapters
+  report/       Markdown, HTML, SVG, and JSON renderers
+  cli/          commander program (score, report, parse)
+config/         default.yaml: every weight, threshold, and cost band
+examples/       synthetic workflows and interview notes
+docs/           PRODUCT.md, generated sample report, chart
+scripts/site/   static site generator for GitHub Pages (npm run site)
+tests/          vitest unit and integration tests
+```
+
 ## Development
 
 ```bash
@@ -205,9 +280,10 @@ npm run format:check  # prettier
 npm run typecheck     # tsc --noEmit
 npm test              # vitest
 npm run demo          # build + full report on the synthetic examples
+npm run site          # static site into site/, fully offline
 ```
 
-`make check` runs lint, format check, type check, and tests; `docker build -t workflow-radar . && docker run --rm workflow-radar` runs the demo in a container.
+`make check` runs lint, format check, type check, and tests; `docker build -t workflow-radar . && docker run --rm workflow-radar` runs the demo in a container. The `Pages` workflow builds the site on every push to `main` and publishes it to the `gh-pages` branch.
 
 ## Data
 
@@ -230,6 +306,10 @@ No external datasets are downloaded or required. The data and code are MIT-licen
 ## Roadmap
 
 Product context, success metrics, trade-offs, and the now / next / later roadmap are in [docs/PRODUCT.md](docs/PRODUCT.md).
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup and conventions, [SECURITY.md](SECURITY.md) for reporting vulnerabilities, and [CHANGELOG.md](CHANGELOG.md) for release notes. If you reference this work, [CITATION.cff](CITATION.cff) has citation metadata.
 
 ## License
 
