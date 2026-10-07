@@ -12,3 +12,4 @@ coverage/
 venv/
 data/downloads/
 .DS_Store
+/site/

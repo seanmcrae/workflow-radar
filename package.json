@@ -29,7 +29,8 @@
     "demo": "npm run build && node dist/cli.js report examples/*.yaml --out report",
     "sample": "npm run build && node dist/cli.js report examples/*.yaml --out docs/sample-report && cp docs/sample-report/quadrant.svg docs/img/quadrant.svg",
     "start": "node dist/cli.js",
-    "check": "npm run lint && npm run format:check && npm run typecheck && npm run test"
+    "check": "npm run lint && npm run format:check && npm run typecheck && npm run test",
+    "site": "tsx scripts/site/main.ts site"
   },
   "dependencies": {
     "commander": "^14.0.0",
@@ -40,7 +41,9 @@
     "@eslint/js": "^10.0.1",
     "@types/node": "^20.19.0",
     "eslint": "^10.12.0",
+    "marked": "^18.1.0",
     "prettier": "^3.6.0",
+    "tsx": "^4.23.15",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.0",
     "vitest": "^3.2.4"

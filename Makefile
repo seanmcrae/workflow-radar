@@ -1,4 +1,4 @@
-.PHONY: install build lint format typecheck test check demo sample clean
+.PHONY: install build lint format typecheck test check demo sample site clean
 
 install:
 	npm ci
@@ -29,5 +29,8 @@ demo:
 sample:
 	npm run sample
 
+site:
+	npm run site
+
 clean:
-	rm -rf dist report coverage
+	rm -rf dist report site coverage

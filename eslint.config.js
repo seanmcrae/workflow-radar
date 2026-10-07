@@ -3,7 +3,7 @@ import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 
 export default defineConfig(
-  { ignores: ["dist/", "coverage/", "report/", "docs/sample-report/"] },
+  { ignores: ["dist/", "coverage/", "report/", "site/", "docs/sample-report/"] },
   js.configs.recommended,
   tseslint.configs.strictTypeChecked,
   {
