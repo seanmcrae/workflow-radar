@@ -15,12 +15,12 @@ A command-line tool for running an AI-opportunity audit of business workflows. Y
 
 On the bundled **synthetic** workflows with the default config. `tests/readme-numbers.test.ts` recomputes every figure here from the code on each CI run.
 
-|          |                                                                                                                                                                                                                           |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Headline | Top 6 by workflow-radar (Now + Next): **$713,759** summed P50 first-year net savings, 8.2x the baseline                                                                                                                   |
-| Baseline | Top 6 by friction score alone: **$87,518**. This is "fund what hurts most", the usual way such lists get ranked. 3 of those 6 lose money at P50 or are not recommended at all, and 1 overlaps with workflow-radar's top 6 |
-| Eval set | 4 synthetic workflows, 23 human steps (2 system steps skipped), 5,000 Monte Carlo iterations per step, seed 42                                                                                                            |
-| Not here | Latency and cost per request. The default path is an offline CLI that makes no model calls, and the optional hosted parse providers have not been benchmarked                                                             |
+|          |                                                                                                                                                                                                                       |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Headline | Top 6 by workflow-radar (Now + Next): **$713,759** summed P50 first-year net savings, 8.2x the baseline                                                                                                               |
+| Baseline | Top 6 by friction score alone: **$87,518**. This stands in for ranking by whichever task feels most tedious. 3 of those 6 lose money at P50 or are not recommended at all, and 1 overlaps with workflow-radar's top 6 |
+| Eval set | 4 synthetic workflows, 23 human steps (2 system steps skipped), 5,000 Monte Carlo iterations per step, seed 42                                                                                                        |
+| Not here | Latency and cost per request. The default path is an offline CLI that makes no model calls, and the optional hosted parse providers have not been benchmarked                                                         |
 
 Totals are sums of per-opportunity medians, not a percentile of the portfolio, and the workflows are invented. Read the gap between the two rankings, not the dollar amounts.
 

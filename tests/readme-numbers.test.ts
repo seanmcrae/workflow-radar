@@ -13,6 +13,7 @@ import { summarize } from "../src/report/summary.js";
  */
 const root = join(import.meta.dirname, "..");
 const readme = readFileSync(join(root, "README.md"), "utf8");
+const product = readFileSync(join(root, "docs", "PRODUCT.md"), "utf8");
 const examplesDir = join(root, "examples");
 const files = readdirSync(examplesDir)
   .filter((f) => f.endsWith(".yaml"))
@@ -52,6 +53,7 @@ describe("README numbers card", () => {
     );
     const ratio = summary.nowNextFirstYearNetP50 / sum(byFriction);
     expect(readme).toContain(`${num(ratio, 1)}x the baseline`);
+    expect(product).toContain(`(${num(ratio, 1)}x on the bundled synthetic workflows today)`);
   });
 
   it("states the eval set size", async () => {
@@ -63,6 +65,22 @@ describe("README numbers card", () => {
     expect(readme).toContain(
       `${num(DEFAULT_CONFIG.simulation.iterations)} Monte Carlo iterations per step, seed ${num(DEFAULT_CONFIG.simulation.seed)}`,
     );
+  });
+});
+
+describe("PRODUCT.md cost estimate", () => {
+  it("multiplies the config cost bands by the Now + Next patterns", async () => {
+    const { result } = await audit();
+    const nowNext = result.opportunities.filter(
+      (o) => o.economics?.quadrant === "quick_win" || o.economics?.quadrant === "big_bet",
+    );
+    const patterns = nowNext.map((o) => o.pattern);
+    expect(new Set(patterns)).toEqual(new Set(["automation_with_review"]));
+    const band = (b: { low: number; likely: number; high: number }) =>
+      [b.low, b.likely, b.high].map((x) => money(x * nowNext.length, "USD")).join(" / ");
+    const { monthlyRunCost, implementationCost } = DEFAULT_CONFIG.patterns;
+    expect(product).toContain(`| ${band(monthlyRunCost.automation_with_review)} `);
+    expect(product).toContain(`| ${band(implementationCost.automation_with_review)} `);
   });
 });
 
