@@ -81,6 +81,35 @@ The tool should be judged by whether it changes decisions and whether its estima
 
 **Evals still missing** (see roadmap): a labelled corpus of 20-30 synthetic interview notes for parser precision/recall per field, and a `calibrate` command that ingests realized outcomes and reports the accuracy and calibration metrics above.
 
+## Minimum viable quality
+
+Release thresholds for a change to the scoring model, the pattern rules, or the defaults. The first three rows are enforced in CI today. The rest are the targets from the metrics table above with a floor and a stretch added; they need real engagements before they can be measured.
+
+| Metric                                                       | Do not ship                                                                    | Ship                                                                   | Delight                                                          | Measured today                            |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------- | ---------------------------------------------------------------- | ----------------------------------------- |
+| Report determinism                                           | Any byte difference for the same inputs, config, and seed                      | Byte-identical, and existing opportunities unchanged when one is added | Same                                                             | Yes, CLI and site tests                   |
+| Hard pattern rules                                           | Any high-regulation, high-judgment, or decision step recommended above copilot | None                                                                   | Same, plus a reviewer override rate tracked per rule             | Yes, unit tests                           |
+| Ranking against the friction-only baseline (sample audit)    | Now + Next worth no more than the top steps by friction alone                  | Above the baseline (8.2x on the bundled synthetic workflows today)     | Above the baseline on a second, independently written sample set | Yes, `tests/readme-numbers.test.ts`       |
+| Draft acceptance rate, heuristic parser                      | Below 60%                                                                      | 70% or higher                                                          | 85% or higher, the hosted-provider target, reached offline       | No; the parser is tested on one interview |
+| Estimate accuracy (median absolute error of P50 hours saved) | Above 50%                                                                      | Under 30%                                                              | Under 15%                                                        | No; needs realized outcomes (`calibrate`) |
+| Interval calibration (realized value inside P10-P90)         | Below 60% or above 95%                                                         | 70-90%                                                                 | 75-85%                                                           | No; same                                  |
+| Ranking quality (Now items paying back within the horizon)   | Below 60%                                                                      | Above 75%                                                              | Above 90%                                                        | No; needs payback tracking                |
+
+## Cost at 1x and 10x usage
+
+All figures are estimates built only from the repo's own assumptions.
+
+**Running workflow-radar.** The default path is an offline CLI: no model calls, no service to host. Auditing 10 or 100 workflows instead of 4 adds local compute only (5,000 Monte Carlo iterations per step). The hosted parse providers are opt-in, and the repo holds no token prices or token counts for them, so their cost is not estimated here.
+
+**Funding the roadmap it recommends.** The cost bands in `config/default.yaml` are per opportunity and per pattern. On the bundled synthetic audit, Now + Next is six automation-with-review steps, so at 1x:
+
+| Usage                    | Monthly run cost (low / likely / high) | One-time build cost (low / likely / high) |
+| ------------------------ | -------------------------------------- | ----------------------------------------- |
+| 1x (sample volumes)      | $1,800 / $4,800 / $9,000               | $90,000 / $210,000 / $420,000             |
+| 10x (ten times the runs) | Same as 1x under the current model     | Same as 1x                                |
+
+The 10x row is the point of the table. The run-cost band covers model usage, hosting, and maintenance as one flat monthly figure, so the model charges the same run cost whether a step runs 12,000 or 120,000 times a month while hours saved scale tenfold. Build cost plausibly stays flat with volume; model usage does not. Until run cost gains a per-run component, treat the 1x band as a floor at higher volumes and expect the model to overstate net savings for high-volume steps.
+
 ## Trade-offs and alternatives considered
 
 - **Transparent weighted model vs. a learned model.** A model trained on past AI projects could in principle rank better, but there is no trustworthy labelled dataset, and an audit that cannot explain itself does not survive a finance or risk review. Chosen: weighted sums with every weight in config and every contribution in the report. Cost: the defaults encode judgment, so they must be visible and easy to change, which they are.
