@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>workflow-radar: product brief</title>
+<meta name="description" content="Problem, users, scope, requirements, success metrics, trade-offs, risks, and roadmap for workflow-radar.">
+<style>
+:root { color-scheme: light; --ink: #111827; --muted: #6b7280; --line: #e5e7eb; --accent: #4f46e5; --soft: #f9fafb; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.6 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--ink); background: #fff; }
+a { color: var(--accent); }
+header.top { position: sticky; top: 0; z-index: 2; background: rgba(255,255,255,.95); border-bottom: 1px solid var(--line); }
+header.top nav { max-width: 1080px; margin: 0 auto; padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; font-size: 14px; }
+header.top a { color: var(--ink); text-decoration: none; } header.top a:hover, header.top a.active { color: var(--accent); }
+header.top .brand { font-weight: 700; margin-right: auto; }
+main { max-width: 1080px; margin: 0 auto; padding: 0 24px 64px; }
+section { padding-top: 24px; }
+h1 { font-size: 40px; line-height: 1.15; margin: 40px 0 12px; letter-spacing: -0.02em; }
+h2 { font-size: 26px; margin: 40px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 19px; margin: 28px 0 8px; }
+.lede { font-size: 20px; color: #374151; max-width: 760px; margin: 0 0 16px; }
+.muted { color: var(--muted); font-size: 14px; }
+.banner { background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px; padding: 10px 14px; font-size: 15px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 8px; }
+.button { display: inline-block; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--accent); text-decoration: none; font-weight: 600; font-size: 15px; }
+.button.primary { background: var(--accent); color: #fff; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 20px 0; }
+.card { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: var(--soft); font-size: 14px; color: #374151; }
+.card b { display: block; font-size: 26px; color: var(--ink); }
+figure { margin: 20px 0; } figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; }
+svg { max-width: 100%; height: auto; display: block; }
+.diagram { border: 1px solid var(--line); border-radius: 10px; padding: 16px; overflow-x: auto; }
+.diagram svg { margin: 0 auto; }
+pre { background: #0f172a; color: #e2e8f0; padding: 14px 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.45; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+:not(pre) > code { background: #f3f4f6; padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; display: block; overflow-x: auto; }
+th, td { border-bottom: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; }
+th { background: #f3f4f6; font-weight: 600; } td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; padding: 0; list-style: none; }
+.features li { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.features b { display: block; }
+iframe.report { width: 100%; height: 900px; border: 1px solid var(--line); border-radius: 10px; }
+details { margin: 12px 0; } summary { cursor: pointer; font-weight: 600; }
+footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+footer div { max-width: 1080px; margin: 0 auto; padding: 18px 24px; }
+article.doc { max-width: 900px; }
+</style>
+</head>
+<body>
+<header class="top"><nav>
+<a class="brand" href="index.html">workflow-radar</a>
+<a href="index.html#quickstart">Quickstart</a>
+<a href="index.html#results">Results</a>
+<a href="index.html#sample-report">Sample report</a>
+<a href="index.html#evaluation">Evaluation</a>
+<a href="index.html#architecture">Architecture</a>
+<a href="index.html#limitations">Limitations</a>
+<a href="product.html" class="active">Product brief</a>
+<a href="https://github.com/seanmcrae/workflow-radar">GitHub</a>
+</nav></header>
+<main>
+<article class="doc">
+<h1>Product brief</h1>
+<h2 id="problem">Problem</h2>
+<p>Most companies now have a list of AI ideas longer than their capacity to build them. The list is usually ranked by who asked loudest, which vendor demo landed best, or which task feels most tedious to the person describing it. None of those are measurements. The predictable result is pilots that work in a demo and do not pay back: a summarizer for a step that takes four minutes twice a week, an &quot;agent&quot; pointed at a regulated approval that legally needs a human signature anyway, a copilot for a task whose real cost is the two days it sits in a queue.</p>
+<p>The information needed to rank these ideas properly is not exotic. It is how often a step happens, how long it takes, how often it is redone, how many handoffs and how much waiting surround it, what data it consumes, how much judgment it needs, and what a mistake costs. Consultants and transformation teams collect most of this in discovery interviews already. What is missing is a consistent, inspectable way to turn those notes into a ranked, costed roadmap with honest uncertainty, without either a spreadsheet nobody else can audit or a black-box score nobody trusts.</p>
+<p>workflow-radar is that step: structured workflow capture, transparent scoring, Monte Carlo ROI, and a prioritized roadmap with a recommended delivery pattern and guardrails for each opportunity.</p>
+<h2 id="users-and-jobs-to-be-done">Users and jobs to be done</h2>
+<table>
+<thead>
+<tr>
+<th>User</th>
+<th>Job to be done</th>
+<th>What they need from the tool</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Transformation / AI program lead</td>
+<td>&quot;Decide which five AI initiatives to fund this half, and defend the choice to finance and risk.&quot;</td>
+<td>A ranked roadmap, P10/P50/P90 economics, payback, and an explanation for every score that survives a skeptical review.</td>
+</tr>
+<tr>
+<td>Operations manager</td>
+<td>&quot;Show where my team&#39;s time actually goes and which parts could be assisted without breaking controls.&quot;</td>
+<td>Per-step friction and labor hours, a pattern recommendation that respects judgment and regulatory limits, and guardrails to take to compliance.</td>
+</tr>
+<tr>
+<td>Consultant running a discovery engagement</td>
+<td>&quot;Turn a week of interviews into a client-ready opportunity assessment quickly and consistently across engagements.&quot;</td>
+<td>Notes-to-YAML drafting, a repeatable scoring model, a configurable cost model, and a self-contained HTML report to hand over.</td>
+</tr>
+</tbody></table>
+<p>Secondary: finance partners reviewing a business case (they read the ROI tables and tornado charts) and risk or compliance reviewers (they read the guardrail notes and pattern rationale).</p>
+<h2 id="scope">Scope</h2>
+<p><strong>In scope (v0.1, this repository)</strong></p>
+<ul>
+<li>Workflow and step model with three-point estimates for every uncertain input, validated by zod, in YAML or JSON.</li>
+<li>Friction score (hands-on time, rework, handoffs, wait) and AI-suitability score (task-type fit, data readiness, judgment, regulatory risk), both with per-factor explanations.</li>
+<li>Task-type classification (extraction, classification, summarization, generation, decision, other), declared or inferred from the step&#39;s wording.</li>
+<li>Pattern recommendation (copilot, automation with review, agent, not recommended) using ordered hard rules, plus guardrail notes for risky steps.</li>
+<li>ROI model with rework-adjusted labor hours, run cost, implementation cost bands, payback; seeded Monte Carlo P10/P50/P90; one-at-a-time tornado sensitivity.</li>
+<li>Value-versus-effort quadrant, payback gate, ranked Now / Next / Later / Park roadmap.</li>
+<li>Interview-notes parser with a deterministic offline default and Anthropic / OpenAI adapters.</li>
+<li>CLI (<code>score</code>, <code>report</code>, <code>parse</code>) and Markdown, HTML, SVG, JSON outputs.</li>
+</ul>
+<p><strong>Out of scope (deliberately)</strong></p>
+<ul>
+<li>Process mining from event logs (Celonis-style discovery). The tool assumes a human has already described the workflow; event-log import is a roadmap item, not the core.</li>
+<li>Building or hosting the AI solutions themselves.</li>
+<li>A web UI or multi-user collaboration. The CLI and static reports keep the first version reviewable in Git.</li>
+<li>Vendor or model selection. Pattern recommendations are about delivery shape and controls, not which model to buy.</li>
+<li>Claims about real organizations. All bundled data is synthetic.</li>
+</ul>
+<h2 id="requirements">Requirements</h2>
+<p><strong>Functional</strong></p>
+<ol>
+<li>A workflow file with a typo, out-of-range value, unordered range, or duplicate step id is rejected with a field-qualified error; nothing is silently defaulted except documented optional fields.</li>
+<li>Every score in every output can be decomposed into named factors, their weights, their points, and a one-line reason.</li>
+<li>Any weight, threshold, cost band, or automation fraction can be changed in a config file without code changes; partial overrides inherit the defaults.</li>
+<li>A step that is high-regulation, high-judgment, or a decision task is never recommended for unattended automation, whatever its score.</li>
+<li>ROI is reported as a distribution (P10/P50/P90 and probability of positive first-year net), not a single number, alongside the likely-input point estimate.</li>
+<li>Given the same inputs, config, and seed, the report is byte-identical. Adding or reordering workflows does not change any existing opportunity&#39;s simulation.</li>
+<li>The parse command works with no API keys and never sends data anywhere unless a hosted provider is explicitly selected.</li>
+<li>The HTML report opens offline: no scripts, no CDN, no external fonts or images.</li>
+</ol>
+<p><strong>Non-functional</strong></p>
+<ul>
+<li>Full audit of the four bundled workflows (23 human steps, 5,000 iterations each) runs in well under a second of simulation time on a laptop; the CLI integration tests run it end to end.</li>
+<li>No network access in tests; no secrets required in CI.</li>
+</ul>
+<h2 id="success-metrics-and-evals">Success metrics and evals</h2>
+<p>The tool should be judged by whether it changes decisions and whether its estimates hold up, not by how many reports it produces.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+<th>Target</th>
+<th>How it is measured</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Audit cycle time</td>
+<td>Hours from last discovery interview to a reviewed roadmap</td>
+<td>Under 1 working day for up to 10 workflows</td>
+<td>Time between <code>parse</code> draft creation and final <code>report</code> commit in an engagement repo</td>
+</tr>
+<tr>
+<td>Draft acceptance rate</td>
+<td>Share of fields in a <code>parse</code> draft that survive human review unchanged</td>
+<td>Above 70% for the heuristic parser, above 85% for hosted providers</td>
+<td>Field-level diff between draft YAML and reviewed YAML</td>
+</tr>
+<tr>
+<td>Estimate accuracy</td>
+<td>Error of P50 hours saved versus realized hours saved 90 days after launch</td>
+<td>Median absolute error under 30%</td>
+<td>Realized savings logged per opportunity; compared to <code>audit.json</code></td>
+</tr>
+<tr>
+<td>Interval calibration</td>
+<td>Share of launched opportunities whose realized value falls between P10 and P90</td>
+<td>70-90% (an 80% interval should contain about 80%)</td>
+<td>Same data; persistently below 70% means ranges are too narrow and defaults need widening</td>
+</tr>
+<tr>
+<td>Ranking quality</td>
+<td>Share of &quot;Now&quot; opportunities that reach payback within the stated horizon</td>
+<td>Above 75%</td>
+<td>Payback tracking for funded items</td>
+</tr>
+<tr>
+<td>Adoption</td>
+<td>Share of funded AI initiatives in an organization that went through an audit first</td>
+<td>Above 80% after two planning cycles</td>
+<td>Program portfolio review</td>
+</tr>
+<tr>
+<td>Override rate</td>
+<td>Share of pattern recommendations changed by reviewers, and why</td>
+<td>Tracked, not targeted; a high rate on one rule means the rule is wrong</td>
+<td>Review notes</td>
+</tr>
+</tbody></table>
+<p><strong>Evals that exist in the repository today</strong></p>
+<ul>
+<li>Scoring math is pinned by unit tests with hand-computed expected values (friction, suitability, effort, quadrant edges, value cap).</li>
+<li>ROI equations and Monte Carlo behavior are tested for determinism per seed, seed sensitivity within statistical tolerance, percentile ordering, degenerate (fixed-input) ranges collapsing to the point estimate, and triangular sampling mean.</li>
+<li>The heuristic parser is evaluated field by field against a synthetic interview (<code>examples/notes/invoice-interview.txt</code>) and must produce a schema-valid workflow with the expected durations, rework rate, wait times, handoffs, systems, sensitivity, and system-step detection.</li>
+<li>Hosted adapters are tested against recorded-shape responses with an injected <code>fetch</code>, including HTTP errors and malformed content.</li>
+<li>CLI integration tests run <code>score</code>, <code>report</code>, and <code>parse</code> in-process, including byte-identical reports for a fixed seed.</li>
+</ul>
+<p><strong>Evals still missing</strong> (see roadmap): a labelled corpus of 20-30 synthetic interview notes for parser precision/recall per field, and a <code>calibrate</code> command that ingests realized outcomes and reports the accuracy and calibration metrics above.</p>
+<h2 id="minimum-viable-quality">Minimum viable quality</h2>
+<p>Release thresholds for a change to the scoring model, the pattern rules, or the defaults. The first three rows are enforced in CI today. The rest are the targets from the metrics table above with a floor and a stretch added; they need real engagements before they can be measured.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Do not ship</th>
+<th>Ship</th>
+<th>Delight</th>
+<th>Measured today</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Report determinism</td>
+<td>Any byte difference for the same inputs, config, and seed</td>
+<td>Byte-identical, and existing opportunities unchanged when one is added</td>
+<td>Same</td>
+<td>Yes, CLI and site tests</td>
+</tr>
+<tr>
+<td>Hard pattern rules</td>
+<td>Any high-regulation, high-judgment, or decision step recommended above copilot</td>
+<td>None</td>
+<td>Same, plus a reviewer override rate tracked per rule</td>
+<td>Yes, unit tests</td>
+</tr>
+<tr>
+<td>Ranking against the friction-only baseline (sample audit)</td>
+<td>Now + Next worth no more than the top steps by friction alone</td>
+<td>Above the baseline (8.2x on the bundled synthetic workflows today)</td>
+<td>Above the baseline on a second, independently written sample set</td>
+<td>Yes, <code>tests/readme-numbers.test.ts</code></td>
+</tr>
+<tr>
+<td>Draft acceptance rate, heuristic parser</td>
+<td>Below 60%</td>
+<td>70% or higher</td>
+<td>85% or higher, the hosted-provider target, reached offline</td>
+<td>No; the parser is tested on one interview</td>
+</tr>
+<tr>
+<td>Estimate accuracy (median absolute error of P50 hours saved)</td>
+<td>Above 50%</td>
+<td>Under 30%</td>
+<td>Under 15%</td>
+<td>No; needs realized outcomes (<code>calibrate</code>)</td>
+</tr>
+<tr>
+<td>Interval calibration (realized value inside P10-P90)</td>
+<td>Below 60% or above 95%</td>
+<td>70-90%</td>
+<td>75-85%</td>
+<td>No; same</td>
+</tr>
+<tr>
+<td>Ranking quality (Now items paying back within the horizon)</td>
+<td>Below 60%</td>
+<td>Above 75%</td>
+<td>Above 90%</td>
+<td>No; needs payback tracking</td>
+</tr>
+</tbody></table>
+<h2 id="cost-at-1x-and-10x-usage">Cost at 1x and 10x usage</h2>
+<p>All figures are estimates built only from the repo&#39;s own assumptions.</p>
+<p><strong>Running workflow-radar.</strong> The default path is an offline CLI: no model calls, no service to host. Auditing 10 or 100 workflows instead of 4 adds local compute only (5,000 Monte Carlo iterations per step). The hosted parse providers are opt-in, and the repo holds no token prices or token counts for them, so their cost is not estimated here.</p>
+<p><strong>Funding the roadmap it recommends.</strong> The cost bands in <code>config/default.yaml</code> are per opportunity and per pattern. On the bundled synthetic audit, Now + Next is six automation-with-review steps, so at 1x:</p>
+<table>
+<thead>
+<tr>
+<th>Usage</th>
+<th>Monthly run cost (low / likely / high)</th>
+<th>One-time build cost (low / likely / high)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1x (sample volumes)</td>
+<td>$1,800 / $4,800 / $9,000</td>
+<td>$90,000 / $210,000 / $420,000</td>
+</tr>
+<tr>
+<td>10x (ten times the runs)</td>
+<td>Same as 1x under the current model</td>
+<td>Same as 1x</td>
+</tr>
+</tbody></table>
+<p>The 10x row is the point of the table. The run-cost band covers model usage, hosting, and maintenance as one flat monthly figure, so the model charges the same run cost whether a step runs 12,000 or 120,000 times a month while hours saved scale tenfold. Build cost plausibly stays flat with volume; model usage does not. Until run cost gains a per-run component, treat the 1x band as a floor at higher volumes and expect the model to overstate net savings for high-volume steps.</p>
+<h2 id="trade-offs-and-alternatives-considered">Trade-offs and alternatives considered</h2>
+<ul>
+<li><strong>Transparent weighted model vs. a learned model.</strong> A model trained on past AI projects could in principle rank better, but there is no trustworthy labelled dataset, and an audit that cannot explain itself does not survive a finance or risk review. Chosen: weighted sums with every weight in config and every contribution in the report. Cost: the defaults encode judgment, so they must be visible and easy to change, which they are.</li>
+<li><strong>Additive suitability vs. multiplicative gating.</strong> An additive score lets strong data readiness compensate for a task that is not AI-shaped at all (ordering a laptop scored 69). Rather than make the score opaque, the pattern rules gate explicitly: no AI-shaped task means not recommended, and regulation or judgment caps the pattern at copilot. Scores stay explainable; the gates are named in the rationale.</li>
+<li><strong>Triangular distributions vs. PERT or lognormal.</strong> Interviewees give &quot;usually 8 minutes, between 6 and 12&quot;, which maps directly to a triangle. PERT would weight the mode more heavily and lognormal would need parameters nobody can state. Triangular is the honest translation of what people actually say; it slightly overweights the tails, which errs toward caution.</li>
+<li><strong>Independent sampling vs. correlated inputs.</strong> Correlating volume with duration (busy months, rushed work) would be more realistic but requires correlation estimates nobody has. Independence is documented as a limitation, and portfolio totals are labelled as sums of medians rather than presented as a portfolio percentile.</li>
+<li><strong>Per-step opportunities vs. per-workflow.</strong> Steps are the unit at which AI patterns actually differ (extraction vs. approval in the same workflow). The cost is that adjacent steps automated together share build cost the model does not credit; this is on the roadmap as opportunity bundling.</li>
+<li><strong>Payback gate vs. pure quadrant.</strong> A two-axis grid alone placed steps with 30+ month payback in &quot;Fill-ins&quot;. The gate parks anything whose median payback exceeds a configurable horizon (18 months by default), and the chart draws those as hollow markers so the override is visible rather than hidden.</li>
+<li><strong>Raw <code>fetch</code> vs. vendor SDKs for LLM adapters.</strong> Two small HTTP calls do not justify two SDK dependency trees, and <code>fetch</code> injection makes the adapters fully testable offline.</li>
+<li><strong>CLI and static files vs. a web app.</strong> Audits are reviewed artifacts. YAML in Git plus a self-contained HTML report gives diffable inputs and outputs and works inside client environments where installing a service is not an option.</li>
+</ul>
+<h2 id="risks">Risks</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Impact</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Garbage in: interview estimates are biased (rework and wait time are routinely underestimated)</td>
+<td>Confident-looking but wrong rankings</td>
+<td>Three-point ranges everywhere; tornado chart shows which input moves the answer, so the team knows which number to go measure; calibration metric catches systematic bias over time</td>
+</tr>
+<tr>
+<td>False precision: P50 figures read as commitments</td>
+<td>Business cases built on medians, then missed</td>
+<td>Report leads with ranges and probability of positive return; synthetic banner on demo data; docs state labor savings are not budget cuts</td>
+</tr>
+<tr>
+<td>Defaults treated as benchmarks</td>
+<td>Every client gets the same automation fractions and cost bands</td>
+<td>Defaults are round numbers, documented as placeholders, and overridable per run; report prints the config used</td>
+</tr>
+<tr>
+<td>Pattern rules too permissive for a regulated client</td>
+<td>An &quot;agent&quot; recommendation in a context that cannot support one</td>
+<td>Hard rules ordered before thresholds; guardrail notes on every medium/high-risk step; rules are a short, reviewable function</td>
+</tr>
+<tr>
+<td>LLM parser invents numbers</td>
+<td>Fabricated durations enter the model</td>
+<td>Prompt forbids invention and requires warnings; output validated by the same schema; drafts are labelled for review; offline heuristic is the default</td>
+</tr>
+<tr>
+<td>Sensitive interview content sent to a hosted model</td>
+<td>Data-handling breach</td>
+<td>Hosted providers are opt-in per command and require an explicit key; the default path never leaves the machine</td>
+</tr>
+<tr>
+<td>Optimizing for hours instead of outcomes</td>
+<td>Automating steps that should be eliminated</td>
+<td>Report surfaces wait time and handoffs as friction even when they produce no labor savings; process redesign is called out as a separate lever in the roadmap</td>
+</tr>
+</tbody></table>
+<h2 id="roadmap">Roadmap</h2>
+<p><strong>Now (next 4-6 weeks)</strong></p>
+<ul>
+<li><code>calibrate</code> command: ingest realized savings per opportunity id and report P50 error and P10-P90 coverage against the original <code>audit.json</code>.</li>
+<li>Labelled synthetic notes corpus (20-30 interviews across functions) and a parser eval reporting per-field precision and recall for each provider.</li>
+<li>Opportunity bundling: let adjacent steps in a workflow share one implementation-cost draw and report the combined case.</li>
+<li><code>validate</code> command and a published JSON Schema for editor autocompletion of workflow files.</li>
+</ul>
+<p><strong>Next (one quarter)</strong></p>
+<ul>
+<li>Correlated sampling for workflow-level inputs (one volume draw shared by all steps in a workflow per iteration) so portfolio percentiles become real percentiles.</li>
+<li>Portfolio view: capacity-constrained selection of opportunities under a build budget, with marginal value per dollar.</li>
+<li>Spreadsheet import/export for teams that capture discovery data in Excel or Google Sheets.</li>
+<li>Organization profiles: saved config overlays for automation fractions and cost bands, versioned alongside audits.</li>
+</ul>
+<p><strong>Later</strong></p>
+<ul>
+<li>Event-log import (CSV of case id, activity, timestamp) to derive volumes, durations, and wait times instead of estimating them.</li>
+<li>Post-launch monitoring hooks that record realized hours per opportunity and feed calibration automatically.</li>
+<li>A lightweight review UI over the same YAML and JSON artifacts for non-technical stakeholders.</li>
+</ul>
+
+</article>
+</main>
+<footer><div>workflow-radar 0.1.0 · MIT License · Sean McRae · <a href="https://github.com/seanmcrae/workflow-radar">github.com/seanmcrae/workflow-radar</a> · This site is generated by <code>npm run site</code> from the code and the bundled synthetic examples.</div></footer>
+
+</body>
+</html>

@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>workflow-radar: rank AI opportunities by friction, suitability, and ROI</title>
+<meta name="description" content="Score business workflows for friction and AI suitability, estimate ROI with Monte Carlo uncertainty, and produce a prioritized AI roadmap.">
+<style>
+:root { color-scheme: light; --ink: #111827; --muted: #6b7280; --line: #e5e7eb; --accent: #4f46e5; --soft: #f9fafb; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.6 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--ink); background: #fff; }
+a { color: var(--accent); }
+header.top { position: sticky; top: 0; z-index: 2; background: rgba(255,255,255,.95); border-bottom: 1px solid var(--line); }
+header.top nav { max-width: 1080px; margin: 0 auto; padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; font-size: 14px; }
+header.top a { color: var(--ink); text-decoration: none; } header.top a:hover, header.top a.active { color: var(--accent); }
+header.top .brand { font-weight: 700; margin-right: auto; }
+main { max-width: 1080px; margin: 0 auto; padding: 0 24px 64px; }
+section { padding-top: 24px; }
+h1 { font-size: 40px; line-height: 1.15; margin: 40px 0 12px; letter-spacing: -0.02em; }
+h2 { font-size: 26px; margin: 40px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 19px; margin: 28px 0 8px; }
+.lede { font-size: 20px; color: #374151; max-width: 760px; margin: 0 0 16px; }
+.muted { color: var(--muted); font-size: 14px; }
+.banner { background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px; padding: 10px 14px; font-size: 15px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 8px; }
+.button { display: inline-block; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--accent); text-decoration: none; font-weight: 600; font-size: 15px; }
+.button.primary { background: var(--accent); color: #fff; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 20px 0; }
+.card { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: var(--soft); font-size: 14px; color: #374151; }
+.card b { display: block; font-size: 26px; color: var(--ink); }
+figure { margin: 20px 0; } figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; }
+svg { max-width: 100%; height: auto; display: block; }
+.diagram { border: 1px solid var(--line); border-radius: 10px; padding: 16px; overflow-x: auto; }
+.diagram svg { margin: 0 auto; }
+pre { background: #0f172a; color: #e2e8f0; padding: 14px 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.45; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+:not(pre) > code { background: #f3f4f6; padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; display: block; overflow-x: auto; }
+th, td { border-bottom: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; }
+th { background: #f3f4f6; font-weight: 600; } td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; padding: 0; list-style: none; }
+.features li { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.features b { display: block; }
+iframe.report { width: 100%; height: 900px; border: 1px solid var(--line); border-radius: 10px; }
+details { margin: 12px 0; } summary { cursor: pointer; font-weight: 600; }
+footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+footer div { max-width: 1080px; margin: 0 auto; padding: 18px 24px; }
+article.doc { max-width: 900px; }
+</style>
+</head>
+<body>
+<header class="top"><nav>
+<a class="brand" href="index.html">workflow-radar</a>
+<a href="index.html#quickstart">Quickstart</a>
+<a href="index.html#results">Results</a>
+<a href="index.html#sample-report">Sample report</a>
+<a href="index.html#evaluation">Evaluation</a>
+<a href="index.html#architecture">Architecture</a>
+<a href="index.html#limitations">Limitations</a>
+<a href="product.html">Product brief</a>
+<a href="https://github.com/seanmcrae/workflow-radar">GitHub</a>
+</nav></header>
+<main>
+<section id="overview">
+<h1>Fund the AI work that pays back, not the best demo.</h1>
+<p class="lede">workflow-radar turns discovery-interview estimates into a ranked AI roadmap: explainable friction and AI-suitability scores, a delivery pattern with guardrails for each step, and ROI as a P10/P50/P90 range from a seeded Monte Carlo simulation.</p>
+<div class="actions">
+<a class="button primary" href="#quickstart">Quickstart</a>
+<a class="button" href="report/report.html">Sample report</a>
+<a class="button" href="product.html">Product brief</a>
+<a class="button" href="https://github.com/seanmcrae/workflow-radar">GitHub</a>
+</div>
+<p class="banner"><b>Synthetic data.</b> Every figure on this site is computed at build time by running the tool on the 4 bundled synthetic example workflows. The numbers illustrate the method; they are not measurements of any real organization.</p>
+<div class="cards">
+<div class="card"><b>23</b>human steps assessed across 4 workflows</div>
+<div class="card"><b>21</b>steps with a recommended AI pattern; 8 parked by value or payback</div>
+<div class="card"><b>1,968</b>hours / month freed by the 6 Now + Next items (sum of P50s)</div>
+<div class="card"><b>1.2 mo</b>median payback for the top quick win: Customer support triage, draft first response</div>
+</div>
+<figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 560" width="820" height="560" font-family="Helvetica, Arial, sans-serif" role="img" aria-labelledby="quadrant-title">
+<title id="quadrant-title">Value versus effort for 21 recommended AI opportunities</title>
+<rect width="820" height="560" fill="#ffffff"/>
+<rect x="64.0" y="48.0" width="230.0" height="220.0" fill="#ecfdf5"/>
+<text x="72.0" y="66.0" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="start">Quick wins</text>
+<rect x="294.0" y="48.0" width="230.0" height="220.0" fill="#eff6ff"/>
+<text x="516.0" y="66.0" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="end">Big bets</text>
+<rect x="64.0" y="268.0" width="230.0" height="220.0" fill="#f9fafb"/>
+<text x="72.0" y="478.0" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="start">Fill-ins</text>
+<rect x="294.0" y="268.0" width="230.0" height="220.0" fill="#fef2f2"/>
+<text x="516.0" y="478.0" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="end">Deprioritize</text>
+<rect x="64" y="48" width="460" height="440" fill="none" stroke="#9ca3af"/>
+<line x1="294.0" y1="48" x2="294.0" y2="488" stroke="#9ca3af" stroke-dasharray="4 4"/>
+<line x1="64" y1="268.0" x2="524" y2="268.0" stroke="#9ca3af" stroke-dasharray="4 4"/>
+<text x="64.0" y="506" font-size="11" fill="#4b5563" text-anchor="middle">0</text>
+<text x="56" y="492.0" font-size="11" fill="#4b5563" text-anchor="end">0</text>
+<text x="179.0" y="506" font-size="11" fill="#4b5563" text-anchor="middle">25</text>
+<text x="56" y="382.0" font-size="11" fill="#4b5563" text-anchor="end">25</text>
+<text x="294.0" y="506" font-size="11" fill="#4b5563" text-anchor="middle">50</text>
+<text x="56" y="272.0" font-size="11" fill="#4b5563" text-anchor="end">50</text>
+<text x="409.0" y="506" font-size="11" fill="#4b5563" text-anchor="middle">75</text>
+<text x="56" y="162.0" font-size="11" fill="#4b5563" text-anchor="end">75</text>
+<text x="524.0" y="506" font-size="11" fill="#4b5563" text-anchor="middle">100</text>
+<text x="56" y="52.0" font-size="11" fill="#4b5563" text-anchor="end">100</text>
+<text x="294" y="538" font-size="13" fill="#111827" text-anchor="middle">Effort score (higher = harder)</text>
+<text transform="translate(18 268) rotate(-90)" font-size="13" fill="#111827" text-anchor="middle">Value score (P50 annual net savings vs cap)</text>
+<text x="64" y="28" font-size="16" font-weight="bold" fill="#111827">AI opportunities: value vs effort</text>
+<g class="opportunity"><title>#1 Customer support triage: Draft first response</title><circle cx="289.4" cy="66.0" r="18.0" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="289.4" y="70.0" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">1</text></g>
+<g class="opportunity"><title>#2 Customer support triage: Read new ticket and tag product area and intent</title><circle cx="248.0" cy="61.9" r="13.9" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="248.0" y="65.9" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">2</text></g>
+<g class="opportunity"><title>#3 Sales proposal drafting: Draft proposal narrative and scope</title><circle cx="289.4" cy="162.2" r="10.2" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="289.4" y="166.2" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">3</text></g>
+<g class="opportunity"><title>#4 Invoice processing: Key invoice header and line items into the ERP</title><circle cx="271.0" cy="177.1" r="11.5" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="271.0" y="181.1" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">4</text></g>
+<g class="opportunity"><title>#5 Customer support triage: Escalate to Tier 2 with a case summary</title><circle cx="289.4" cy="237.8" r="12.0" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="289.4" y="241.8" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">5</text></g>
+<g class="opportunity"><title>#6 Customer support triage: Look up customer account and order history</title><circle cx="294.0" cy="135.4" r="13.0" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="294.0" y="139.4" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">6</text></g>
+<g class="opportunity"><title>#7 Sales proposal drafting: Answer customer security questionnaire</title><circle cx="225.0" cy="394.0" r="8.3" fill="#2563eb" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="225.0" y="398.0" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">7</text></g>
+<g class="opportunity"><title>#8 Customer support triage: Set priority and route to the right queue</title><circle cx="248.0" cy="342.2" r="10.7" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="248.0" y="346.2" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">8</text></g>
+<g class="opportunity"><title>#9 Sales proposal drafting: Map customer requirements to product capabilities</title><circle cx="289.4" cy="347.5" r="8.9" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="289.4" y="351.5" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">9</text></g>
+<g class="opportunity"><title>#10 Invoice processing: Resolve three-way match exceptions</title><circle cx="197.4" cy="425.7" r="8.5" fill="#2563eb" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="197.4" y="429.7" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">10</text></g>
+<g class="opportunity"><title>#11 Sales proposal drafting: Build pricing and approve discounts</title><circle cx="202.0" cy="448.8" r="7.6" fill="#2563eb" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="202.0" y="452.8" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">11</text></g>
+<g class="opportunity"><title>#12 Customer support triage: Decide on refund or goodwill credit</title><circle cx="183.6" cy="454.2" r="8.4" fill="#2563eb" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="183.6" y="458.2" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">12</text></g>
+<g class="opportunity"><title>#13 Invoice processing: Assign GL codes and cost centers</title><circle cx="266.4" cy="393.6" r="9.3" fill="#059669" fill-opacity="0.82" stroke="#ffffff" stroke-width="1.5"/>
+<text x="266.4" y="397.6" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">13</text></g>
+<g class="opportunity"><title>#14 Invoice processing: Approve invoices above the $5,000 threshold (parked: payback)</title><circle cx="186.5" cy="473.2" r="7.6" fill="#ffffff" stroke="#2563eb" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="186.5" y="477.2" font-size="9" font-weight="bold" fill="#2563eb" text-anchor="middle">14</text></g>
+<g class="opportunity"><title>#15 Employee onboarding: Collect and verify new-hire documents (parked: payback)</title><circle cx="321.6" cy="480.8" r="7.2" fill="#ffffff" stroke="#2563eb" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="321.6" y="484.8" font-size="9" font-weight="bold" fill="#2563eb" text-anchor="middle">15</text></g>
+<g class="opportunity"><title>#16 Employee onboarding: Enter new hire into payroll (parked: payback)</title><circle cx="229.6" cy="481.2" r="6.8" fill="#ffffff" stroke="#2563eb" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="229.6" y="485.2" font-size="9" font-weight="bold" fill="#2563eb" text-anchor="middle">16</text></g>
+<g class="opportunity"><title>#17 Invoice processing: Download invoice attachments from the AP inbox (parked: payback)</title><circle cx="271.0" cy="446.4" r="8.5" fill="#ffffff" stroke="#059669" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="271.0" y="450.4" font-size="9" font-weight="bold" fill="#059669" text-anchor="middle">17</text></g>
+<g class="opportunity"><title>#18 Employee onboarding: Answer policy and benefits questions (parked: payback)</title><circle cx="317.0" cy="464.2" r="8.3" fill="#ffffff" stroke="#059669" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="317.0" y="468.2" font-size="9" font-weight="bold" fill="#059669" text-anchor="middle">18</text></g>
+<g class="opportunity"><title>#19 Sales proposal drafting: Summarize discovery call notes (parked: payback)</title><circle cx="289.4" cy="476.0" r="7.5" fill="#ffffff" stroke="#059669" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="289.4" y="480.0" font-size="9" font-weight="bold" fill="#059669" text-anchor="middle">19</text></g>
+<g class="opportunity"><title>#20 Employee onboarding: Draft a personalized first-week plan (parked: payback)</title><circle cx="271.0" cy="480.2" r="7.8" fill="#ffffff" stroke="#059669" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="271.0" y="484.2" font-size="9" font-weight="bold" fill="#059669" text-anchor="middle">20</text></g>
+<g class="opportunity"><title>#21 Employee onboarding: Request accounts and access for each system (parked: payback)</title><circle cx="399.8" cy="480.1" r="7.9" fill="#ffffff" stroke="#d97706" stroke-width="2" stroke-dasharray="3 2"/>
+<text x="399.8" y="484.1" font-size="9" font-weight="bold" fill="#d97706" text-anchor="middle">21</text></g>
+<text x="556" y="52" font-size="12" font-weight="bold" fill="#111827">Pattern</text>
+<circle cx="562" cy="66" r="6" fill="#2563eb" fill-opacity="0.82"/>
+<text x="574" y="70" font-size="12" fill="#374151">Copilot</text>
+<circle cx="562" cy="84" r="6" fill="#059669" fill-opacity="0.82"/>
+<text x="574" y="88" font-size="12" fill="#374151">Automation with review</text>
+<circle cx="562" cy="102" r="6" fill="#d97706" fill-opacity="0.82"/>
+<text x="574" y="106" font-size="12" fill="#374151">Agent</text>
+<text x="556" y="124" font-size="11" fill="#6b7280">Size = P50 hours saved per month</text>
+<text x="556" y="140" font-size="11" fill="#6b7280">Hollow = parked, P50 payback &gt; 18 mo</text>
+<text x="556" y="166" font-size="12" font-weight="bold" fill="#111827">Rank</text>
+<text x="556" y="181" font-size="10.5" fill="#374151">1. Draft first response</text>
+<text x="556" y="196" font-size="10.5" fill="#374151">2. Read new ticket and tag product area an…</text>
+<text x="556" y="211" font-size="10.5" fill="#374151">3. Draft proposal narrative and scope</text>
+<text x="556" y="226" font-size="10.5" fill="#374151">4. Key invoice header and line items into…</text>
+<text x="556" y="241" font-size="10.5" fill="#374151">5. Escalate to Tier 2 with a case summary</text>
+<text x="556" y="256" font-size="10.5" fill="#374151">6. Look up customer account and order hist…</text>
+<text x="556" y="271" font-size="10.5" fill="#374151">7. Answer customer security questionnaire</text>
+<text x="556" y="286" font-size="10.5" fill="#374151">8. Set priority and route to the right que…</text>
+<text x="556" y="301" font-size="10.5" fill="#374151">9. Map customer requirements to product ca…</text>
+<text x="556" y="316" font-size="10.5" fill="#374151">10. Resolve three-way match exceptions</text>
+<text x="556" y="331" font-size="10.5" fill="#374151">11. Build pricing and approve discounts</text>
+<text x="556" y="346" font-size="10.5" fill="#374151">12. Decide on refund or goodwill credit</text>
+<text x="556" y="361" font-size="10.5" fill="#374151">13. Assign GL codes and cost centers</text>
+<text x="556" y="376" font-size="10.5" fill="#374151">14. Approve invoices above the $5,000 thres…</text>
+<text x="556" y="391" font-size="10.5" fill="#374151">15. Collect and verify new-hire documents</text>
+<text x="556" y="406" font-size="10.5" fill="#374151">16. Enter new hire into payroll</text>
+<text x="556" y="421" font-size="10.5" fill="#374151">17. Download invoice attachments from the A…</text>
+<text x="556" y="436" font-size="10.5" fill="#374151">18. Answer policy and benefits questions</text>
+<text x="556" y="451" font-size="10.5" fill="#374151">19. Summarize discovery call notes</text>
+<text x="556" y="466" font-size="10.5" fill="#374151">20. Draft a personalized first-week plan</text>
+<text x="556" y="481" font-size="10.5" fill="#374151">21. Request accounts and access for each sy…</text>
+</svg>
+
+<figcaption>Value versus effort for every recommended opportunity. Marker size is P50 hours saved per month; hollow markers are parked because their median payback exceeds the 18-month horizon.</figcaption></figure>
+</section>
+<section id="quickstart">
+<h2>Quickstart</h2>
+<p>Requires Node.js 20 or later. No API keys, no network access after <code>npm ci</code>.</p>
+<pre><code>git clone https://github.com/seanmcrae/workflow-radar.git
+cd workflow-radar
+npm ci
+npm run demo   # build, then audit examples/*.yaml into report/</code></pre>
+<p>Or run the commands directly after <code>npm run build</code>:</p>
+<pre><code>node dist/cli.js score examples/invoice.yaml --explain
+node dist/cli.js report examples/*.yaml --out report
+node dist/cli.js parse examples/notes/invoice-interview.txt --out draft.yaml</code></pre>
+<h3>Features</h3>
+<ul class="features">
+<li><b>Validated workflow model</b>YAML or JSON, zod-validated, three-point ranges for every uncertain input, field-qualified errors.</li>
+<li><b>Explainable scores</b>Friction and AI suitability are weighted sums; every factor&#39;s weight, points, and reason are in the report.</li>
+<li><b>Pattern rules with guardrails</b>Copilot, automation with review, or agent, gated by judgment, regulation, and task type before any threshold.</li>
+<li><b>Monte Carlo ROI</b>Seeded triangular sampling gives P10/P50/P90 hours, net savings, payback, and P(first-year net &gt; 0).</li>
+<li><b>Sensitivity</b>One-at-a-time tornado analysis shows which input to go and measure before funding.</li>
+<li><b>Roadmap</b>Value-versus-effort quadrants plus a payback gate produce a ranked Now / Next / Later / Park plan.</li>
+<li><b>Interview notes parser</b>Offline heuristic parser by default; Anthropic and OpenAI adapters behind one interface, opt-in by key.</li>
+<li><b>Portable reports</b>Markdown, self-contained HTML, SVG, and JSON. Same inputs and seed give byte-identical output.</li>
+</ul>
+</section>
+<section id="results">
+<h2>Results on the bundled synthetic workflows</h2>
+<p>Default config, 5,000 Monte Carlo iterations per opportunity, seed 42. Regenerated on every site build from <code>examples/*.yaml</code>.</p>
+<table><thead><tr><th class="n">#</th><th>Phase</th><th>Opportunity</th><th>Pattern</th><th class="n">Hours/mo P50</th><th class="n">First-year net P10 / P50 / P90</th><th class="n">Payback P50</th><th class="n">P(net &gt; 0)</th></tr></thead><tbody>
+<tr><td class="n">1</td><td>Now</td><td>Customer support triage: Draft first response</td><td>Automation with review</td><td class="n">837</td><td class="n">$225,482 / $333,756 / $480,520</td><td class="n">1.2 mo</td><td class="n">100%</td></tr>
+<tr><td class="n">2</td><td>Now</td><td>Customer support triage: Read new ticket and tag product area and intent</td><td>Automation with review</td><td class="n">359</td><td class="n">$64,345 / $114,925 / $179,487</td><td class="n">3.0 mo</td><td class="n">100%</td></tr>
+<tr><td class="n">3</td><td>Now</td><td>Sales proposal drafting: Draft proposal narrative and scope</td><td>Automation with review</td><td class="n">105</td><td class="n">$32,811 / $72,012 / $121,176</td><td class="n">4.2 mo</td><td class="n">100%</td></tr>
+<tr><td class="n">4</td><td>Now</td><td>Invoice processing: Key invoice header and line items into the ERP</td><td>Automation with review</td><td class="n">176</td><td class="n">$34,643 / $66,135 / $102,980</td><td class="n">4.5 mo</td><td class="n">100%</td></tr>
+<tr><td class="n">5</td><td>Now</td><td>Customer support triage: Escalate to Tier 2 with a case summary</td><td>Automation with review</td><td class="n">208</td><td class="n">$13,766 / $46,037 / $87,352</td><td class="n">5.4 mo</td><td class="n">97%</td></tr>
+<tr><td class="n">6</td><td>Next</td><td>Customer support triage: Look up customer account and order history</td><td>Automation with review</td><td class="n">283</td><td class="n">$41,518 / $80,893 / $129,156</td><td class="n">3.9 mo</td><td class="n">100%</td></tr>
+</tbody></table>
+<figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 416" width="820" height="416" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="First-year net P10 to P90 interval per opportunity">
+<rect width="820" height="416" fill="#ffffff"/>
+<text x="346" y="22" font-size="13" fill="#374151">First-year net, P10 to P90 (dot = P50)</text>
+<line x1="346.0" y1="34" x2="346.0" y2="380" stroke="#e5e7eb"/>
+<text x="346.0" y="398" font-size="11" fill="#6b7280" text-anchor="middle">-$100,000</text>
+<line x1="417.0" y1="34" x2="417.0" y2="380" stroke="#e5e7eb"/>
+<text x="417.0" y="398" font-size="11" fill="#6b7280" text-anchor="middle">$0</text>
+<line x1="488.0" y1="34" x2="488.0" y2="380" stroke="#e5e7eb"/>
+<text x="488.0" y="398" font-size="11" fill="#6b7280" text-anchor="middle">$100,000</text>
+<line x1="559.0" y1="34" x2="559.0" y2="380" stroke="#e5e7eb"/>
+<text x="559.0" y="398" font-size="11" fill="#6b7280" text-anchor="middle">$200,000</text>
+<line x1="630.0" y1="34" x2="630.0" y2="380" stroke="#e5e7eb"/>
+<text x="630.0" y="398" font-size="11" fill="#6b7280" text-anchor="middle">$300,000</text>
+<line x1="701.0" y1="34" x2="701.0" y2="380" stroke="#e5e7eb"/>
+<text x="701.0" y="398" font-size="11" fill="#6b7280" text-anchor="middle">$400,000</text>
+<line x1="772.0" y1="34" x2="772.0" y2="380" stroke="#e5e7eb"/>
+<text x="772.0" y="398" font-size="11" fill="#6b7280" text-anchor="middle">$500,000</text>
+<line x1="417.0" y1="34" x2="417.0" y2="380" stroke="#111827" stroke-dasharray="4 3"/>
+<text x="330" y="61.0" font-size="12" fill="#111827" text-anchor="end"><title>1. Customer support triage: Draft first response</title>1. Customer support triage: Draft first response</text>
+<line x1="577.1" y1="57.0" x2="758.2" y2="57.0" stroke="#059669" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+<circle cx="654.0" cy="57.0" r="6" fill="#059669"><title>Automation with review: P10 $225,482, P50 $333,756, P90 $480,520</title></circle>
+<text x="330" y="95.0" font-size="12" fill="#111827" text-anchor="end"><title>2. Customer support triage: Read new ticket and tag product area and intent</title>2. Customer support triage: Read new ticket and…</text>
+<line x1="462.7" y1="91.0" x2="544.4" y2="91.0" stroke="#059669" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+<circle cx="498.6" cy="91.0" r="6" fill="#059669"><title>Automation with review: P10 $64,345, P50 $114,925, P90 $179,487</title></circle>
+<text x="330" y="129.0" font-size="12" fill="#111827" text-anchor="end"><title>3. Sales proposal drafting: Draft proposal narrative and scope</title>3. Sales proposal drafting: Draft proposal narr…</text>
+<line x1="440.3" y1="125.0" x2="503.0" y2="125.0" stroke="#059669" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+<circle cx="468.1" cy="125.0" r="6" fill="#059669"><title>Automation with review: P10 $32,811, P50 $72,012, P90 $121,176</title></circle>
+<text x="330" y="163.0" font-size="12" fill="#111827" text-anchor="end"><title>4. Invoice processing: Key invoice header and line items into the ERP</title>4. Invoice processing: Key invoice header and l…</text>
+<line x1="441.6" y1="159.0" x2="490.1" y2="159.0" stroke="#059669" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+<circle cx="464.0" cy="159.0" r="6" fill="#059669"><title>Automation with review: P10 $34,643, P50 $66,135, P90 $102,980</title></circle>
+<text x="330" y="197.0" font-size="12" fill="#111827" text-anchor="end"><title>5. Customer support triage: Escalate to Tier 2 with a case summary</title>5. Customer support triage: Escalate to Tier 2…</text>
+<line x1="426.8" y1="193.0" x2="479.0" y2="193.0" stroke="#059669" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+<circle cx="449.7" cy="193.0" r="6" fill="#059669"><title>Automation with review: P10 $13,766, P50 $46,037, P90 $87,352</title></circle>
+<text x="330" y="231.0" font-size="12" fill="#111827" text-anchor="end"><title>6. Customer support triage: Look up customer account and order history</title>6. Customer support triage: Look up customer ac…</text>
+<line x1="446.5" y1="227.0" x2="508.7" y2="227.0" stroke="#059669" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+<circle cx="474.4" cy="227.0" r="6" fill="#059669"><title>Automation with review: P10 $41,518, P50 $80,893, P90 $129,156</title></circle>
+<text x="330" y="265.0" font-size="12" fill="#111827" text-anchor="end"><title>7. Sales proposal drafting: Answer customer security questionnaire</title>7. Sales proposal drafting: Answer customer sec…</text>
+<line x1="419.4" y1="261.0" x2="444.9" y2="261.0" stroke="#2563eb" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+<circle cx="430.0" cy="261.0" r="6" fill="#2563eb"><title>Copilot: P10 $3,404, P50 $18,327, P90 $39,254</title></circle>
+<text x="330" y="299.0" font-size="12" fill="#111827" text-anchor="end"><title>8. Customer support triage: Set priority and route to the right queue</title>8. Customer support triage: Set priority and ro…</text>
+<line x1="409.9" y1="295.0" x2="438.1" y2="295.0" stroke="#059669" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+<circle cx="424.4" cy="295.0" r="6" fill="#059669"><title>Automation with review: P10 -$10,005, P50 $10,437, P90 $29,776</title></circle>
+<text x="330" y="333.0" font-size="12" fill="#111827" text-anchor="end"><title>9. Sales proposal drafting: Map customer requirements to product capabilities</title>9. Sales proposal drafting: Map customer requir…</text>
+<line x1="406.4" y1="329.0" x2="442.2" y2="329.0" stroke="#059669" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+<circle cx="423.1" cy="329.0" r="6" fill="#059669"><title>Automation with review: P10 -$14,922, P50 $8,549, P90 $35,472</title></circle>
+<text x="330" y="367.0" font-size="12" fill="#111827" text-anchor="end"><title>10. Invoice processing: Resolve three-way match exceptions</title>10. Invoice processing: Resolve three-way match…</text>
+<line x1="414.7" y1="363.0" x2="432.6" y2="363.0" stroke="#2563eb" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+<circle cx="422.3" cy="363.0" r="6" fill="#2563eb"><title>Copilot: P10 -$3,257, P50 $7,480, P90 $21,956</title></circle>
+</svg>
+<figcaption>First-year net for the ten highest-ranked opportunities. Wide lines crossing the dashed break-even rule are fragile bets even when their median looks good.</figcaption></figure>
+<details><summary>CLI output: <code>workflow-radar report examples/*.yaml</code></summary>
+<pre><code>Assessed 23 human steps across 4 workflows (4 synthetic); 21 recommended, 2 not recommended.
+
+Phase   #  Opportunity                                                                 Hours/mo P50  1st-yr net P50  Payback P50
+-----  --  --------------------------------------------------------------------------  ------------  --------------  -----------
+Now     1  Customer support triage: Draft first response                                        837        $333,756       1.2 mo
+Now     2  Customer support triage: Read new ticket and tag product area and intent             359        $114,925       3.0 mo
+Now     3  Sales proposal drafting: Draft proposal narrative and scope                          105         $72,012       4.2 mo
+Now     4  Invoice processing: Key invoice header and line items into the ERP                   176         $66,135       4.5 mo
+Now     5  Customer support triage: Escalate to Tier 2 with a case summary                      208         $46,037       5.4 mo
+Next    6  Customer support triage: Look up customer account and order history                  283         $80,893       3.9 mo
+Later   7  Sales proposal drafting: Answer customer security questionnaire                       31         $18,327       5.1 mo
+Later   8  Customer support triage: Set priority and route to the right queue                   131         $10,437       9.4 mo
+Later   9  Sales proposal drafting: Map customer requirements to product capabilities            50          $8,549       9.8 mo
+Later  10  Invoice processing: Resolve three-way match exceptions                                37          $7,480       7.7 mo
+Later  11  Sales proposal drafting: Build pricing and approve discounts                          14            -$31      12.0 mo
+Later  12  Customer support triage: Decide on refund or goodwill credit                          32         -$2,138      14.2 mo
+Later  13  Invoice processing: Assign GL codes and cost centers                                  64         -$6,822      14.6 mo
+Park   14  Invoice processing: Approve invoices above the $5,000 threshold                       15         -$7,202      26.0 mo
+Park   15  Employee onboarding: Collect and verify new-hire documents                             9        -$11,339      76.2 mo
+Park   16  Employee onboarding: Enter new hire into payroll                                       4        -$14,436   no payback
+Park   17  Invoice processing: Download invoice attachments from the AP inbox                    37        -$24,875      33.9 mo
+Park   18  Employee onboarding: Answer policy and benefits questions                             30        -$30,957      58.5 mo
+Park   19  Sales proposal drafting: Summarize discovery call notes                               12        -$35,001     116.7 mo
+Park   20  Employee onboarding: Draft a personalized first-week plan                             19        -$37,344     &gt; 120 mo
+Park   21  Employee onboarding: Request accounts and access for each system                      22       -$114,258   no payback
+
+Wrote site/report/report.md, site/report/report.html, site/report/quadrant.svg, site/report/audit.json
+</code></pre></details>
+<details><summary>CLI output: <code>workflow-radar score examples/invoice.yaml</code></summary>
+<pre><code>Invoice processing (Accounts Payable) [synthetic data]
+Volume 1,800 (1,500–2,200) / month · workflow friction 16.8
+
+#  Step                                            Task type       Friction  Suitability  Pattern                 Hours/mo P50  Payback P50
+-  ----------------------------------------------  --------------  --------  -----------  ----------------------  ------------  -----------
+1  Download invoice attachments from the AP inbox  extraction             3           87  Automation with review            37      33.9 mo
+2  Key invoice header and line items into the ERP  extraction            17           84  Automation with review           176       4.5 mo
+3  Assign GL codes and cost centers                classification        10           84  Automation with review            64      14.6 mo
+4  Resolve three-way match exceptions              decision              35           55  Copilot                           37       7.7 mo
+5  Approve invoices above the $5,000 threshold     decision              30           50  Copilot                           15      26.0 mo
+6  Scheduled payment run                           -                      -            -  system step (skipped)              -            -
+</code></pre></details>
+</section>
+<section id="sample-report">
+<h2>Sample report</h2>
+<p>The full self-contained HTML report the <code>report</code> command writes for the synthetic examples, including per-factor score breakdowns, ROI tables, and tornado sensitivity for every opportunity. <a href="report/report.html">Open it on its own page</a>, or get the <a href="report/report.md">Markdown</a> and machine-readable <a href="report/audit.json">audit.json</a>.</p>
+<iframe class="report" src="report/report.html" title="workflow-radar sample report" loading="lazy"></iframe>
+</section>
+<section id="evaluation">
+<h2>How evaluation works</h2>
+<p>Each human step is scored independently, then ranked:</p>
+<ol>
+<li><strong>Friction (0-100)</strong> is a weighted average of hands-on minutes, rework rate, handoffs, and wait time, each normalized against a saturation point (60 minutes, 25% rework, 4 handoffs, 1,440 minutes by default).</li>
+<li><strong>AI suitability (0-100)</strong> is a weighted average of task-type fit (extraction and classification high, decisions low), data readiness, judgment (inverted), and regulatory sensitivity (inverted).</li>
+<li><strong>Pattern</strong> comes from ordered hard rules first (no AI-shaped task, or suitability below the minimum, means not recommended; high regulation, high judgment, or a decision task caps the step at copilot), then suitability thresholds.</li>
+<li><strong>ROI</strong> samples every three-point input from a triangular distribution: hours saved = volume x share of runs x minutes x (1 + rework rate) / 60 x automation fraction, and first-year net = 12 x (hours saved x loaded hourly cost - monthly run cost) - implementation cost. Each opportunity gets its own seeded stream, so adding a workflow never changes another&#39;s numbers.</li>
+<li><strong>Prioritization</strong> maps P50 annual net savings to a value score, combines pattern, data readiness, regulation, and system count into an effort score, places each step in a quadrant, and parks anything whose median payback exceeds the horizon.</li>
+</ol>
+<p>How the tool checks itself, in this repository:</p>
+<ul>
+<li>Scoring math is pinned by unit tests with hand-computed expected values (friction, suitability, effort, quadrant edges, value cap).</li>
+<li>Monte Carlo tests cover determinism per seed, percentile ordering, degenerate ranges collapsing to the point estimate, and the triangular sampler&#39;s mean.</li>
+<li>The heuristic parser is evaluated field by field against synthetic interview notes and must produce a schema-valid workflow.</li>
+<li>Hosted LLM adapters are tested against recorded-shape responses through an injected <code>fetch</code>, including HTTP errors and malformed content.</li>
+<li>CLI integration tests run <code>score</code>, <code>report</code>, and <code>parse</code> in-process and require byte-identical reports for a fixed seed; the site build test requires the embedded report to equal the committed sample.</li>
+<li><code>tests/readme-numbers.test.ts</code> recomputes the Numbers card, including the friction-only baseline, and the figures in <a href="#where-it-fails">Where it fails</a>, so the README cannot drift from the code.</li>
+</ul>
+<p>How a team would measure it in use (estimate accuracy, interval calibration, draft acceptance rate) is defined in <a href="product.html#success-metrics-and-evals">docs/PRODUCT.md</a>.</p>
+
+</section>
+<section id="architecture">
+<h2>Architecture</h2>
+<figure class="diagram">
+<div class="diagram-render"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 486 732" width="486" height="732" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="Architecture diagram">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/></marker></defs>
+<path d="M243.0,48.0 C243.0,66.0 243.0,62.0 243.0,80.0" fill="none" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M243.0,134.0 C243.0,152.0 145.0,148.0 145.0,166.0" fill="none" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M337.5,204.0 C337.5,222.0 99.5,226.0 99.5,244.0" fill="none" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M145.0,204.0 C145.0,222.0 99.5,226.0 99.5,244.0" fill="none" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M344.5,290.0 C344.5,308.0 243.0,304.0 243.0,322.0" fill="none" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M99.5,282.0 C99.5,300.0 243.0,304.0 243.0,322.0" fill="none" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M243.0,376.0 C243.0,394.0 243.0,390.0 243.0,408.0" fill="none" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M243.0,446.0 C243.0,464.0 243.0,460.0 243.0,478.0" fill="none" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M243.0,548.0 C243.0,566.0 243.0,562.0 243.0,580.0" fill="none" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M243.0,634.0 C243.0,652.0 243.0,648.0 243.0,666.0" fill="none" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="152.0" y="12.0" width="182.0" height="36.0" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+<text x="243.0" y="34.0" text-anchor="middle" font-size="13" fill="#111827">Interview notes (.txt)</text>
+<rect x="141.5" y="82.0" width="203.0" height="52.0" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+<text x="243.0" y="104.0" text-anchor="middle" font-size="13" fill="#111827">parse: NotesProvider</text>
+<text x="243.0" y="120.0" text-anchor="middle" font-size="13" fill="#111827">mock | anthropic | openai</text>
+<rect x="64.5" y="168.0" width="161.0" height="36.0" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+<text x="145.0" y="190.0" text-anchor="middle" font-size="13" fill="#111827">Draft workflow YAML</text>
+<rect x="253.5" y="168.0" width="168.0" height="36.0" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+<text x="337.5" y="190.0" text-anchor="middle" font-size="13" fill="#111827">Workflow YAML / JSON</text>
+<rect x="12.0" y="246.0" width="175.0" height="36.0" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+<text x="99.5" y="268.0" text-anchor="middle" font-size="13" fill="#111827">zod schema validation</text>
+<rect x="215.0" y="238.0" width="259.0" height="52.0" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+<text x="344.5" y="260.0" text-anchor="middle" font-size="13" fill="#111827">config/default.yaml</text>
+<text x="344.5" y="276.0" text-anchor="middle" font-size="13" fill="#111827">(weights, thresholds, cost bands)</text>
+<rect x="141.5" y="324.0" width="203.0" height="52.0" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+<text x="243.0" y="346.0" text-anchor="middle" font-size="13" fill="#111827">Scoring</text>
+<text x="243.0" y="362.0" text-anchor="middle" font-size="13" fill="#111827">friction + AI suitability</text>
+<rect x="138.0" y="410.0" width="210.0" height="36.0" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+<text x="243.0" y="432.0" text-anchor="middle" font-size="13" fill="#111827">Pattern rules + guardrails</text>
+<rect x="148.5" y="480.0" width="189.0" height="68.0" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+<text x="243.0" y="502.0" text-anchor="middle" font-size="13" fill="#111827">ROI model</text>
+<text x="243.0" y="518.0" text-anchor="middle" font-size="13" fill="#111827">Monte Carlo P10/P50/P90</text>
+<text x="243.0" y="534.0" text-anchor="middle" font-size="13" fill="#111827">tornado sensitivity</text>
+<rect x="145.0" y="582.0" width="196.0" height="52.0" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+<text x="243.0" y="604.0" text-anchor="middle" font-size="13" fill="#111827">Value vs effort quadrant</text>
+<text x="243.0" y="620.0" text-anchor="middle" font-size="13" fill="#111827">payback gate, ranking</text>
+<rect x="141.5" y="668.0" width="203.0" height="52.0" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+<text x="243.0" y="690.0" text-anchor="middle" font-size="13" fill="#111827">Report</text>
+<text x="243.0" y="706.0" text-anchor="middle" font-size="13" fill="#111827">Markdown, HTML, SVG, JSON</text>
+</svg></div>
+<pre class="mermaid-source" hidden>flowchart LR
+    notes[&quot;Interview notes (.txt)&quot;] --&gt; parse[&quot;parse: NotesProvider&lt;br/&gt;mock | anthropic | openai&quot;]
+    parse --&gt; draft[&quot;Draft workflow YAML&quot;]
+    yaml[&quot;Workflow YAML / JSON&quot;] --&gt; load[&quot;zod schema validation&quot;]
+    draft --&gt; load
+    cfg[&quot;config/default.yaml&lt;br/&gt;(weights, thresholds, cost bands)&quot;] --&gt; score
+    load --&gt; score[&quot;Scoring&lt;br/&gt;friction + AI suitability&quot;]
+    score --&gt; pattern[&quot;Pattern rules + guardrails&quot;]
+    pattern --&gt; roi[&quot;ROI model&lt;br/&gt;Monte Carlo P10/P50/P90&lt;br/&gt;tornado sensitivity&quot;]
+    roi --&gt; prio[&quot;Value vs effort quadrant&lt;br/&gt;payback gate, ranking&quot;]
+    prio --&gt; out[&quot;Report&lt;br/&gt;Markdown, HTML, SVG, JSON&quot;]</pre>
+</figure><table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>src/domain</code></td>
+<td>zod schemas for workflows and steps, three-point estimates, YAML/JSON loading with path-qualified errors</td>
+</tr>
+<tr>
+<td><code>src/config.ts</code></td>
+<td>Config schema, defaults (mirrored in <code>config/default.yaml</code>), deep-merge of partial overrides</td>
+</tr>
+<tr>
+<td><code>src/scoring</code></td>
+<td>Friction score, task-type classifier, AI suitability score; each returns per-factor contributions</td>
+</tr>
+<tr>
+<td><code>src/roi</code></td>
+<td>ROI equations, mulberry32 PRNG, triangular sampling, Monte Carlo summary, one-at-a-time tornado analysis</td>
+</tr>
+<tr>
+<td><code>src/prioritize</code></td>
+<td>Pattern recommendation, guardrail notes, effort score, quadrant placement, audit orchestration</td>
+</tr>
+<tr>
+<td><code>src/parse</code></td>
+<td><code>NotesProvider</code> interface, deterministic heuristic parser, Anthropic and OpenAI adapters over <code>fetch</code></td>
+</tr>
+<tr>
+<td><code>src/report</code></td>
+<td>Markdown and HTML renderers, inline SVG quadrant chart, JSON serialization</td>
+</tr>
+<tr>
+<td><code>src/cli</code></td>
+<td>commander program; <code>run()</code> returns an exit code so the CLI is tested in-process</td>
+</tr>
+</tbody></table>
+
+</section>
+<section id="design">
+<h2>Design decisions</h2>
+<ul>
+<li><strong>Transparent weighted sums over a learned model.</strong> There is no labelled dataset of &quot;AI projects that paid back&quot; to train on, and the people who act on an audit need to argue with it. Every score is <code>sum(weight x normalized factor)</code>, the weights are in YAML, and each factor&#39;s points and a one-line reason are in the report.</li>
+<li><strong>Hard rules before thresholds.</strong> Pattern selection checks task type, regulatory sensitivity, judgment, and decision tasks before it looks at the suitability score, so a high score cannot buy autonomy on a regulated or high-judgment step. Agents additionally require low risk, low judgment, at least two systems, and at least one handoff.</li>
+<li><strong>Ranges, not point estimates.</strong> Volume, duration, rework, hourly cost, automation fraction, build cost, and run cost are all three-point ranges sampled as triangular distributions. The report shows P10/P50/P90 and the probability that first-year net is positive, so a fragile opportunity looks fragile.</li>
+<li><strong>Reproducible randomness.</strong> Simulations use a seeded mulberry32 PRNG. Each opportunity&#39;s seed is the run seed XOR a hash of its id, so results do not change when workflows are added or reordered. Same inputs and seed produce byte-identical reports.</li>
+<li><strong>Rework is labor.</strong> Hours saved use <code>minutes x (1 + rework rate)</code>, because a step redone 12% of the time costs 1.12x its nominal time.</li>
+<li><strong>Wait time is friction, not cost.</strong> Queue time drives the friction score (it is what people complain about) but not labor savings, because nobody is paid to wait in a queue.</li>
+<li><strong>Value is net of run cost; build cost is effort.</strong> The value axis uses P50 annual savings after model and maintenance costs; one-time build cost shows up in effort and payback. A payback gate then parks anything whose median payback exceeds the configured horizon, whatever its grid position.</li>
+<li><strong>LLM output is untrusted input.</strong> The parse providers return a raw object that goes through the same zod schema as hand-written YAML, the prompt embeds the schema generated by <code>z.toJSONSchema</code>, and the offline heuristic parser is the default so nothing requires an API key.</li>
+</ul>
+
+</section>
+<section id="data">
+<h2>Data</h2>
+<p>All bundled data is synthetic and labelled as such in each file (<code>synthetic: true</code> plus a header comment):</p>
+<ul>
+<li><code>examples/invoice.yaml</code>, <code>support-triage.yaml</code>, <code>sales-proposal.yaml</code>, <code>employee-onboarding.yaml</code>: invented workflows with plausible but made-up volumes, durations, and costs.</li>
+<li><code>examples/notes/invoice-interview.txt</code>: invented interview notes for the parser.</li>
+</ul>
+<p>No external datasets are downloaded or required. The data and code are MIT-licensed.</p>
+
+</section>
+<section id="limitations">
+<h2>Limitations</h2>
+<ul>
+<li><strong>Inputs are estimates from interviews.</strong> The model is only as good as the minutes and volumes people report; the ranges help, but systematic bias (everyone underestimating rework) is not corrected.</li>
+<li><strong>Inputs are sampled independently.</strong> Real volume and duration often correlate, which would widen the tails. Portfolio totals in the report are sums of per-opportunity medians, not a percentile of the portfolio.</li>
+<li><strong>Opportunities are per step.</strong> Automating two adjacent steps together usually shares build cost; the model charges each step its own band.</li>
+<li><strong>Automation fractions and cost bands are defaults, not benchmarks.</strong> They are deliberately round numbers meant to be replaced with an organization&#39;s own figures.</li>
+<li><strong>The task-type classifier is keyword-based.</strong> It explains its matches and can be overridden per step with <code>taskType</code>, but it will misread unusual phrasing.</li>
+<li><strong>Labor savings are not cash savings.</strong> Hours freed only become money if the capacity is redeployed or hiring is avoided; the report labels figures as savings, not budget cuts.</li>
+</ul>
+
+</section>
+</main>
+<footer><div>workflow-radar 0.1.0 · MIT License · Sean McRae · <a href="https://github.com/seanmcrae/workflow-radar">github.com/seanmcrae/workflow-radar</a> · This site is generated by <code>npm run site</code> from the code and the bundled synthetic examples.</div></footer>
+<script type="module">
+const figures = document.querySelectorAll("figure.diagram");
+if (figures.length > 0) {
+  try {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false, theme: "neutral", securityLevel: "strict" });
+    let n = 0;
+    for (const figure of figures) {
+      const source = figure.querySelector(".mermaid-source");
+      const target = figure.querySelector(".diagram-render");
+      if (!source || !target) continue;
+      const { svg } = await mermaid.render("mermaid-" + n++, source.textContent);
+      target.innerHTML = svg;
+    }
+  } catch (error) {
+    console.info("Mermaid unavailable; showing the pre-rendered diagram.", error);
+  }
+}
+</script>
+</body>
+</html>
