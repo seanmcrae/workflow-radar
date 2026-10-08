@@ -5,13 +5,24 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node.js 20+](https://img.shields.io/badge/node-%3E%3D20-339933.svg)](package.json)
 
-Rank AI opportunities in business workflows by measured friction, AI suitability, and Monte Carlo ROI, with every score explained.
+Decide which AI initiatives to fund first, and which to drop, from how your workflows actually run: workflow-radar ranks every workflow step by measured friction, AI suitability, and Monte Carlo ROI, and shows the arithmetic behind each score.
 
 **Live docs:** [seanmcrae.github.io/workflow-radar](https://seanmcrae.github.io/workflow-radar/): results, the full sample report, architecture, and the product brief.
 
 A command-line tool for running an AI-opportunity audit of business workflows. You describe each workflow as a list of steps (who does it, how long it takes, how often it is redone, how many handoffs, what data it uses, how much judgment and regulatory exposure it carries), and workflow-radar scores friction and AI suitability, recommends a delivery pattern with guardrails, estimates ROI as a P10/P50/P90 range with a seeded Monte Carlo simulation, and writes a prioritized roadmap as Markdown, self-contained HTML, SVG, and JSON. Every score is a transparent weighted sum whose weights live in a config file, and every number in the report can be traced back to the inputs that produced it. The aim is to pick AI initiatives by measured friction and expected value rather than by whichever demo was most impressive.
 
-**Headline result** (bundled synthetic workflows, default config, 5,000 iterations, seed 42): 21 of 23 human steps get a recommended AI pattern, but only 6 land in Now or Next. The top quick win, drafting first responses to support tickets, frees a median 837 hours a month and pays back in 1.2 months (P50). The three highest-friction steps (pricing approval, new-hire document collection, legal review) rank Later, Park, and not recommended, because judgment, regulation, or low volume caps what AI can return on them.
+## Numbers
+
+On the bundled **synthetic** workflows with the default config. `tests/readme-numbers.test.ts` recomputes every figure here from the code on each CI run.
+
+|          |                                                                                                                                                                                                                           |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Headline | Top 6 by workflow-radar (Now + Next): **$713,759** summed P50 first-year net savings, 8.2x the baseline                                                                                                                   |
+| Baseline | Top 6 by friction score alone: **$87,518**. This is "fund what hurts most", the usual way such lists get ranked. 3 of those 6 lose money at P50 or are not recommended at all, and 1 overlaps with workflow-radar's top 6 |
+| Eval set | 4 synthetic workflows, 23 human steps (2 system steps skipped), 5,000 Monte Carlo iterations per step, seed 42                                                                                                            |
+| Not here | Latency and cost per request. The default path is an offline CLI that makes no model calls, and the optional hosted parse providers have not been benchmarked                                                             |
+
+Totals are sums of per-opportunity medians, not a percentile of the portfolio, and the workflows are invented. Read the gap between the two rankings, not the dollar amounts.
 
 ![Value vs effort quadrant for the bundled synthetic workflows](docs/img/quadrant.svg)
 
@@ -158,8 +169,41 @@ How the tool checks itself, in this repository:
 - The heuristic parser is evaluated field by field against synthetic interview notes and must produce a schema-valid workflow.
 - Hosted LLM adapters are tested against recorded-shape responses through an injected `fetch`, including HTTP errors and malformed content.
 - CLI integration tests run `score`, `report`, and `parse` in-process and require byte-identical reports for a fixed seed; the site build test requires the embedded report to equal the committed sample.
+- `tests/readme-numbers.test.ts` recomputes the Numbers card, including the friction-only baseline, and the figures in [Where it fails](#where-it-fails), so the README cannot drift from the code.
 
 How a team would measure it in use (estimate accuracy, interval calibration, draft acceptance rate) is defined in [docs/PRODUCT.md](docs/PRODUCT.md#success-metrics-and-evals).
+
+## Where it fails
+
+The sample audit is the eval, so its weak spots are the failure modes worth knowing. They split into limits of the data the model is fed and limits of how the model is built.
+
+**Data and estimate limits**
+
+| Failure mode or slice               | Evidence                                                                                                                          | Effect                                                                                                                                        |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| No realized outcomes                | Every input is an invented interview estimate; nothing in the repo compares a P50 with what a launched opportunity actually saved | Estimate accuracy and interval calibration, the two metrics in [docs/PRODUCT.md](docs/PRODUCT.md) that matter most, are unmeasured            |
+| Parser tested on one interview      | `tests/parse-heuristic.test.ts` checks a single synthetic transcript field by field                                               | No per-field precision or recall, so the 70% draft-acceptance target is untested ([#7](https://github.com/seanmcrae/workflow-radar/issues/7)) |
+| Biased inputs pass straight through | Ranges widen the interval but stay centred on what people report                                                                  | If everyone under-reports rework, every opportunity is undervalued by the same bias and the ranking cannot show it                            |
+
+**Design and scaffolding limits**
+
+| Limit                   | Evidence in the sample audit                                                                                                                              | Effect                                                                                                                                                                                 |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Keyword task classifier | "Request accounts and access for each system" is read as classification from the word "route" in its description: suitability 92, recommended as an agent | The score and pattern on that step are wrong; it is parked only because it never pays back (P50 first-year net -$114,258) ([#6](https://github.com/seanmcrae/workflow-radar/issues/6)) |
+| Per-step build cost     | Employee onboarding at 40 hires a month: 0 of 6 steps reach Now or Next; 5 parked, 1 not recommended                                                      | Low-volume workflows only pay back if adjacent steps share one build, which the model does not credit                                                                                  |
+| Additive suitability    | "Order laptop and ship equipment" scores 69 on suitability with no AI-shaped task in it                                                                   | The score alone would mislead; the not-recommended gate catches it and names itself in the rationale                                                                                   |
+| Independent sampling    | Volume, duration, and rework are drawn separately                                                                                                         | Tails are too narrow where inputs move together, and portfolio totals can only be sums of medians                                                                                      |
+
+**Considered and rejected.** A pure value-versus-effort grid. On this data it put steps with a 30+ month payback into Fill-ins, so a payback gate now parks anything whose median payback exceeds 18 months, and the chart draws those steps hollow so the override stays visible. A learned ranking model was rejected as well: there is no labelled outcome data to train it on, and finance and risk reviewers need weights they can argue with. Both are written up under trade-offs in [docs/PRODUCT.md](docs/PRODUCT.md#trade-offs-and-alternatives-considered).
+
+## Limitations
+
+- **Inputs are estimates from interviews.** The model is only as good as the minutes and volumes people report; the ranges help, but systematic bias (everyone underestimating rework) is not corrected.
+- **Inputs are sampled independently.** Real volume and duration often correlate, which would widen the tails. Portfolio totals in the report are sums of per-opportunity medians, not a percentile of the portfolio.
+- **Opportunities are per step.** Automating two adjacent steps together usually shares build cost; the model charges each step its own band.
+- **Automation fractions and cost bands are defaults, not benchmarks.** They are deliberately round numbers meant to be replaced with an organization's own figures.
+- **The task-type classifier is keyword-based.** It explains its matches and can be overridden per step with `taskType`, but it will misread unusual phrasing.
+- **Labor savings are not cash savings.** Hours freed only become money if the capacity is redeployed or hiring is avoided; the report labels figures as savings, not budget cuts.
 
 ## Workflow format
 
@@ -294,18 +338,13 @@ All bundled data is synthetic and labelled as such in each file (`synthetic: tru
 
 No external datasets are downloaded or required. The data and code are MIT-licensed.
 
-## Limitations
-
-- **Inputs are estimates from interviews.** The model is only as good as the minutes and volumes people report; the ranges help, but systematic bias (everyone underestimating rework) is not corrected.
-- **Inputs are sampled independently.** Real volume and duration often correlate, which would widen the tails. Portfolio totals in the report are sums of per-opportunity medians, not a percentile of the portfolio.
-- **Opportunities are per step.** Automating two adjacent steps together usually shares build cost; the model charges each step its own band.
-- **Automation fractions and cost bands are defaults, not benchmarks.** They are deliberately round numbers meant to be replaced with an organization's own figures.
-- **The task-type classifier is keyword-based.** It explains its matches and can be overridden per step with `taskType`, but it will misread unusual phrasing.
-- **Labor savings are not cash savings.** Hours freed only become money if the capacity is redeployed or hiring is avoided; the report labels figures as savings, not budget cuts.
-
 ## Roadmap
 
 Product context, success metrics, trade-offs, and the now / next / later roadmap are in [docs/PRODUCT.md](docs/PRODUCT.md).
+
+## How this was built
+
+Code was written with AI coding agents under my direction. I set the problem, success metrics and eval gates, and decided what shipped. Every number here comes from the committed code and synthetic examples and is reproduced in CI: the site test regenerates the sample audit and checks it against the committed copy, and `tests/readme-numbers.test.ts` recomputes the Numbers card and the failure table.
 
 ## Contributing
 
